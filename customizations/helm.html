@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helm Chart Customization Options &mdash; NVIDIA Network Operator v24.7.0 documentation</title>
+  <title>Helm Chart Customization Options &mdash; NVIDIA Network Operator v24.10.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" type="text/css" />
@@ -114,20 +114,21 @@ can find those below.</p>
 <li><p><a class="reference internal" href="#nfd-labels" id="id8">NFD labels</a></p></li>
 <li><p><a class="reference internal" href="#node-feature-discovery" id="id9">Node Feature Discovery</a></p></li>
 <li><p><a class="reference internal" href="#sr-iov-network-operator" id="id10">SR-IOV Network Operator</a></p></li>
-<li><p><a class="reference internal" href="#container-resources" id="id11">Container Resources</a></p></li>
-<li><p><a class="reference internal" href="#nvidia-doca-driver" id="id12">NVIDIA DOCA Driver</a></p></li>
-<li><p><a class="reference internal" href="#nvidia-doca-driver-driver-environment-variables" id="id13">NVIDIA DOCA Driver Driver Environment Variables</a></p></li>
-<li><p><a class="reference internal" href="#rdma-shared-device-plugin" id="id14">RDMA Shared Device Plugin</a></p></li>
-<li><p><a class="reference internal" href="#rdma-device-plugin-resource-configurations" id="id15">RDMA Device Plugin Resource Configurations</a></p></li>
-<li><p><a class="reference internal" href="#sr-iov-network-device-plugin" id="id16">SR-IOV Network Device Plugin</a></p></li>
-<li><p><a class="reference internal" href="#sr-iov-network-device-plugin-resource-configuration" id="id17">SR-IOV Network Device Plugin Resource Configuration</a></p></li>
-<li><p><a class="reference internal" href="#ib-kubernetes" id="id18">IB Kubernetes</a></p></li>
-<li><p><a class="reference internal" href="#ufm-secret" id="id19">UFM Secret</a></p></li>
-<li><p><a class="reference internal" href="#nvidia-ipam-plugin" id="id20">NVIDIA IPAM Plugin</a></p></li>
-<li><p><a class="reference internal" href="#secondary-network" id="id21">Secondary Network</a></p></li>
-<li><p><a class="reference internal" href="#nvidia-nic-feature-discovery" id="id22">NVIDIA NIC Feature Discovery</a></p></li>
-<li><p><a class="reference internal" href="#doca-telemetry-service" id="id23">DOCA Telemetry Service</a></p></li>
-<li><p><a class="reference internal" href="#helm-customization-file" id="id24">Helm customization file</a></p></li>
+<li><p><a class="reference internal" href="#nic-configuration-operator" id="id11">NIC Configuration Operator</a></p></li>
+<li><p><a class="reference internal" href="#container-resources" id="id12">Container Resources</a></p></li>
+<li><p><a class="reference internal" href="#nvidia-doca-driver" id="id13">NVIDIA DOCA Driver</a></p></li>
+<li><p><a class="reference internal" href="#nvidia-doca-driver-driver-environment-variables" id="id14">NVIDIA DOCA Driver Driver Environment Variables</a></p></li>
+<li><p><a class="reference internal" href="#rdma-shared-device-plugin" id="id15">RDMA Shared Device Plugin</a></p></li>
+<li><p><a class="reference internal" href="#rdma-device-plugin-resource-configurations" id="id16">RDMA Device Plugin Resource Configurations</a></p></li>
+<li><p><a class="reference internal" href="#sr-iov-network-device-plugin" id="id17">SR-IOV Network Device Plugin</a></p></li>
+<li><p><a class="reference internal" href="#sr-iov-network-device-plugin-resource-configuration" id="id18">SR-IOV Network Device Plugin Resource Configuration</a></p></li>
+<li><p><a class="reference internal" href="#ib-kubernetes" id="id19">IB Kubernetes</a></p></li>
+<li><p><a class="reference internal" href="#ufm-secret" id="id20">UFM Secret</a></p></li>
+<li><p><a class="reference internal" href="#nvidia-ipam-plugin" id="id21">NVIDIA IPAM Plugin</a></p></li>
+<li><p><a class="reference internal" href="#secondary-network" id="id22">Secondary Network</a></p></li>
+<li><p><a class="reference internal" href="#nvidia-nic-feature-discovery" id="id23">NVIDIA NIC Feature Discovery</a></p></li>
+<li><p><a class="reference internal" href="#doca-telemetry-service" id="id24">DOCA Telemetry Service</a></p></li>
+<li><p><a class="reference internal" href="#helm-customization-file" id="id25">Helm customization file</a></p></li>
 </ul>
 </div>
 <section id="general-parameters">
@@ -167,17 +168,22 @@ can find those below.</p>
 <td><p><cite>true</cite></p></td>
 <td><p>Deploy Node Feature Discovery operator.</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.admissionController.enabled</p></td>
+<tr class="row-even"><td><p>nicConfigurationOperator.enabled</p></td>
+<td><p>bool</p></td>
+<td><p><cite>false</cite></p></td>
+<td><p>Deploy NIC Configuration Operator.</p></td>
+</tr>
+<tr class="row-odd"><td><p>operator.admissionController.enabled</p></td>
 <td><p>bool</p></td>
 <td><p><cite>false</cite></p></td>
 <td><p>Deploy with admission controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.admissionController.useCertManager</p></td>
+<tr class="row-even"><td><p>operator.admissionController.useCertManager</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>Use cert-manager for generating self-signed certificate.</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.affinity.nodeAffinity</p></td>
+<tr class="row-odd"><td><p>operator.affinity.nodeAffinity</p></td>
 <td><p>yaml</p></td>
 <td><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">preferredDuringSchedulingIgnoredDuringExecution</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
@@ -197,37 +203,37 @@ can find those below.</p>
 </td>
 <td><p>Configure node affinity settings for the operator.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.cniBinDirectory</p></td>
+<tr class="row-even"><td><p>operator.cniBinDirectory</p></td>
 <td><p>string</p></td>
 <td><p><cite>“/opt/cni/bin”</cite></p></td>
 <td><p>Directory, where CNI binaries will be deployed on the nodes. Setting for  the sriov-network-operator is set with <code class="docutils literal notranslate"><span class="pre">sriov-network-operator.cniBinPath</span></code> parameter. Note that the CNI bin directory should be aligned with the CNI bin directory in the container runtime.</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.fullnameOverride</p></td>
+<tr class="row-odd"><td><p>operator.fullnameOverride</p></td>
 <td><p>string</p></td>
 <td><p><cite>“”</cite></p></td>
 <td><p>Name to be used to replace generated names.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.image</p></td>
+<tr class="row-even"><td><p>operator.image</p></td>
 <td><p>string</p></td>
 <td><p><cite>“network-operator”</cite></p></td>
 <td><p>Network Operator image name</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.nameOverride</p></td>
+<tr class="row-odd"><td><p>operator.nameOverride</p></td>
 <td><p>string</p></td>
 <td><p><cite>“”</cite></p></td>
 <td><p>Name to be used as part of objects name generation.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.nodeSelector</p></td>
+<tr class="row-even"><td><p>operator.nodeSelector</p></td>
 <td><p>object</p></td>
 <td><p><cite>{}</cite></p></td>
 <td><p>Configure node selector settings for the operator.</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.repository</p></td>
+<tr class="row-odd"><td><p>operator.repository</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvidia/cloud-native”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox”</cite></p></td>
 <td><p>Network Operator image repository.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.resources</p></td>
+<tr class="row-even"><td><p>operator.resources</p></td>
 <td><p>yaml</p></td>
 <td><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">limits</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span><span class="w"></span>
@@ -240,7 +246,7 @@ can find those below.</p>
 </td>
 <td><p>Optional <a class="reference external" href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">resource requests and limits</a> for the operator.</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.tolerations</p></td>
+<tr class="row-odd"><td><p>operator.tolerations</p></td>
 <td><p>yaml</p></td>
 <td><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node-role.kubernetes.io/master&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Equal&quot;</span><span class="w"></span>
@@ -255,17 +261,17 @@ can find those below.</p>
 </td>
 <td><p>Set additional tolerations for various Daemonsets deployed by the operator.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.useDTK</p></td>
+<tr class="row-even"><td><p>operator.useDTK</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>Enable the use of Driver ToolKit to compile OFED drivers (OpenShift only).</p></td>
 </tr>
-<tr class="row-even"><td><p>sriovNetworkOperator.enabled</p></td>
+<tr class="row-odd"><td><p>sriovNetworkOperator.enabled</p></td>
 <td><p>bool</p></td>
 <td><p><cite>false</cite></p></td>
 <td><p>Deploy SR-IOV Network Operator.</p></td>
 </tr>
-<tr class="row-odd"><td><p>upgradeCRDs</p></td>
+<tr class="row-even"><td><p>upgradeCRDs</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>Enable CRDs upgrade with helm pre-install and pre-upgrade hooks.</p></td>
@@ -423,7 +429,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>sriov-network-operator.images.operator</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvidia/mellanox/sriov-network-operator:network-operator-24.7.0”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator:network-operator-24.10.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>sriov-network-operator.images.ovsCni</p></td>
@@ -443,7 +449,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>sriov-network-operator.images.sriovConfigDaemon</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvidia/mellanox/sriov-network-operator-config-daemon:network-operator-24.7.0”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator-config-daemon:network-operator-24.10.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>sriov-network-operator.images.sriovDevicePlugin</p></td>
@@ -453,7 +459,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>sriov-network-operator.images.webhook</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvidia/mellanox/sriov-network-operator-webhook:network-operator-24.7.0”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator-webhook:network-operator-24.10.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>sriov-network-operator.operator.admissionControllers</p></td>
@@ -544,6 +550,57 @@ can find those below.</p>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>Deploy <code class="docutils literal notranslate"><span class="pre">SriovOperatorConfig</span></code> custom resource</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="nic-configuration-operator">
+<h2>NIC Configuration Operator<a class="headerlink" href="#nic-configuration-operator" title="Permalink to this headline"></a></h2>
+<p>NIC Configuration Operator Helm chart customization options can be found <a class="reference external" href="https://github.com/Mellanox/nic-configuration-operator/blob/main/deployment/nic-configuration-operator-chart/README.md">here</a>. Following is a list of overriden values by NVIDIA Operator Helm Chart:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default in NVIDIA Network Operator</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>nic-configuration-operator-chart.configDaemon.image.name</p></td>
+<td><p>string</p></td>
+<td><p><cite>“nic-configuration-operator-daemon”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>nic-configuration-operator-chart.configDaemon.image.repository</p></td>
+<td><p>string</p></td>
+<td><p><cite>“ghcr.io/mellanox”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>nic-configuration-operator-chart.configDaemon.image.tag</p></td>
+<td><p>string</p></td>
+<td><p><cite>“v0.1.1”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>nic-configuration-operator-chart.operator.image.name</p></td>
+<td><p>string</p></td>
+<td><p><cite>“nic-configuration-operator”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>nic-configuration-operator-chart.operator.image.repository</p></td>
+<td><p>string</p></td>
+<td><p><cite>“ghcr.io/mellanox”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>nic-configuration-operator-chart.operator.image.tag</p></td>
+<td><p>string</p></td>
+<td><p><cite>“v0.1.1”</cite></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -650,7 +707,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>ofedDriver.repository</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvidia/mellanox”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox”</cite></p></td>
 <td><p>NVIDIA DOCA Driver image repository.</p></td>
 </tr>
 <tr class="row-even"><td><p>ofedDriver.startupProbe.initialDelaySeconds</p></td>
@@ -735,7 +792,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>ofedDriver.version</p></td>
 <td><p>string</p></td>
-<td><p><cite>“24.07-0.6.1.0-0”</cite></p></td>
+<td><p><cite>“24.10-0.4.6.0-0”</cite></p></td>
 <td><p>NVIDIA DOCA Driver version.</p></td>
 </tr>
 </tbody>
@@ -862,7 +919,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>rdmaSharedDevicePlugin.version</p></td>
 <td><p>string</p></td>
-<td><p><cite>“v1.5.1”</cite></p></td>
+<td><p><cite>“sha-4f3eb2224b8b5f97be3f17441ddee8d41753b7d5”</cite></p></td>
 <td><p>RDMA shared device plugin version.</p></td>
 </tr>
 </tbody>
@@ -1011,7 +1068,7 @@ can find those below.</p>
 </tr>
 <tr class="row-odd"><td><p>ibKubernetes.version</p></td>
 <td><p>string</p></td>
-<td><p><cite>“v1.0.2”</cite></p></td>
+<td><p><cite>“v1.1.0”</cite></p></td>
 <td><p>IB Kubernetes version.</p></td>
 </tr>
 </tbody>
@@ -1196,7 +1253,7 @@ can find those below.</p>
 </tr>
 <tr class="row-even"><td><p>secondaryNetwork.multus.version</p></td>
 <td><p>string</p></td>
-<td><p><cite>“v3.9.3”</cite></p></td>
+<td><p><cite>“v4.1.0”</cite></p></td>
 <td><p>Multus image version.</p></td>
 </tr>
 </tbody>
@@ -1305,7 +1362,7 @@ can find those below.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2024, NVIDIA.
-      <span class="lastupdated">Last updated on Sep 16, 2024.
+      <span class="lastupdated">Last updated on Oct 18, 2024.
       </span></p>
   </div>
 
