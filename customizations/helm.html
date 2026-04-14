@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helm Chart Customization Options &mdash; NVIDIA Network Operator v25.04.0 documentation</title>
+  <title>Helm Chart Customization Options &mdash; NVIDIA Network Operator v26.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" type="text/css" />
@@ -56,16 +56,34 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../platform-support.html">Platform Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting-started-kubernetes.html">Getting Started with Kubernetes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting-started-openshift.html">Getting Started with Red Hat OpenShift</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started-with-kubernetes.html">Getting Started with Kubernetes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started-with-openshift.html">Getting Started with Red Hat OpenShift</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install-network-operator-gov-ready.html">NVIDIA Network Operator Government Ready</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nic-conf-operator/nic-configuration-operator.html">NIC Configuration Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dra-sriov-driver/dra-sriov-driver.html">DRA SR-IOV Driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-launch-kit.html">[TECH PREVIEW] Configuration Assistance with Kubernetes Launch Kit</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="customization.html">Customization Options and CRDs</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Helm Chart</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Helm Chart</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-parameters">General Parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#imagepullsecrets-customization">ImagePullSecrets customization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#nfd-labels">NFD labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#node-feature-discovery">Node Feature Discovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sr-iov-network-operator">SR-IOV Network Operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maintenance-operator">Maintenance Operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#helm-customization-file">Helm customization file</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="crds.html">CRDs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cr-full-example.html">NicClusterPolicy Reference Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cr-full-example.html">NicClusterPolicy Custom Resource Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../life-cycle-management.html">Life Cycle Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kubevirt.html">KubeVirt SR-IOV Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/advanced.html">Advanced Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses.html">Legal Notices and 3rd Party Licenses</a></li>
 </ul>
 
         </div>
@@ -115,9 +133,8 @@ can find those below.</p>
 <li><p><a class="reference internal" href="#nfd-labels" id="id3">NFD labels</a></p></li>
 <li><p><a class="reference internal" href="#node-feature-discovery" id="id4">Node Feature Discovery</a></p></li>
 <li><p><a class="reference internal" href="#sr-iov-network-operator" id="id5">SR-IOV Network Operator</a></p></li>
-<li><p><a class="reference internal" href="#nic-configuration-operator" id="id6">NIC Configuration Operator</a></p></li>
-<li><p><a class="reference internal" href="#maintenance-operator" id="id7">Maintenance Operator</a></p></li>
-<li><p><a class="reference internal" href="#helm-customization-file" id="id8">Helm customization file</a></p></li>
+<li><p><a class="reference internal" href="#maintenance-operator" id="id6">Maintenance Operator</a></p></li>
+<li><p><a class="reference internal" href="#helm-customization-file" id="id7">Helm customization file</a></p></li>
 </ul>
 </div>
 <section id="general-parameters">
@@ -157,16 +174,6 @@ can find those below.</p>
 <td><p><cite>true</cite></p></td>
 <td><p>Deploy Node Feature Discovery operator.</p></td>
 </tr>
-<tr class="row-even"><td><p>nicConfigurationOperator</p></td>
-<td><p>object</p></td>
-<td><p><cite>{“enabled”:false}</cite></p></td>
-<td><p>NIC Configuration Operator helm chart is deprecated and will be deleted in future releases. Use NIC Cluster Policy to deploy the NIC Configuration Operator instead.</p></td>
-</tr>
-<tr class="row-odd"><td><p>nicConfigurationOperator.enabled</p></td>
-<td><p>bool</p></td>
-<td><p><cite>false</cite></p></td>
-<td><p>Deploy NIC Configuration Operator.</p></td>
-</tr>
 <tr class="row-even"><td><p>operator.admissionController.enabled</p></td>
 <td><p>bool</p></td>
 <td><p><cite>false</cite></p></td>
@@ -200,17 +207,27 @@ can find those below.</p>
 <tr class="row-odd"><td><p>operator.cniBinDirectory</p></td>
 <td><p>string</p></td>
 <td><p><cite>“/opt/cni/bin”</cite></p></td>
-<td><p>Directory, where CNI binaries will be deployed on the nodes. Setting for  the sriov-network-operator is set with <code class="docutils literal notranslate"><span class="pre">sriov-network-operator.cniBinPath</span></code> parameter. Note that the CNI bin directory should be aligned with the CNI bin directory in the container runtime.</p></td>
+<td><p>Directory, where CNI binaries will be deployed on the nodes. Setting for the sriov-network-operator is set with <code class="docutils literal notranslate"><span class="pre">sriov-network-operator.cniBinPath</span></code> parameter. Note that the CNI bin directory should be aligned with the CNI bin directory in the container runtime.</p></td>
 </tr>
-<tr class="row-even"><td><p>operator.fullnameOverride</p></td>
+<tr class="row-even"><td><p>operator.cniNetworkDirectory</p></td>
+<td><p>string</p></td>
+<td><p><cite>“/etc/cni/net.d”</cite></p></td>
+<td><p>Directory, where CNI network configuration will be deployed on the nodes. Note that the CNI network directory should be aligned with the CNI network directory in the container runtime.</p></td>
+</tr>
+<tr class="row-odd"><td><p>operator.fullnameOverride</p></td>
 <td><p>string</p></td>
 <td><p><cite>“”</cite></p></td>
 <td><p>Name to be used to replace generated names.</p></td>
 </tr>
-<tr class="row-odd"><td><p>operator.image</p></td>
+<tr class="row-even"><td><p>operator.image</p></td>
 <td><p>string</p></td>
 <td><p><cite>“network-operator”</cite></p></td>
 <td><p>Network Operator image name</p></td>
+</tr>
+<tr class="row-odd"><td><p>operator.maintenanceOperator</p></td>
+<td><p>object</p></td>
+<td><p><cite>{“drainControllerRequestorID”:”nvidia.network-operator-drain-controller”,”nodeMaintenanceNamePrefix”:”network-operator”,”nodeMaintenanceNamespace”:”default”,”requestorID”:”nvidia.network-operator-driver-upgrade-controller”,”useDrainControllerRequestor”:false,”useRequestor”:false}</cite></p></td>
+<td><p>Enable the use of maintenance operator upgrade logic.</p></td>
 </tr>
 <tr class="row-even"><td><p>operator.nameOverride</p></td>
 <td><p>string</p></td>
@@ -234,12 +251,12 @@ can find those below.</p>
 </tr>
 <tr class="row-even"><td><p>operator.ofedDriver.initContainer.repository</p></td>
 <td><p>string</p></td>
-<td><p><cite>“ghcr.io/mellanox”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox”</cite></p></td>
 <td><p>Init container image repository.</p></td>
 </tr>
 <tr class="row-odd"><td><p>operator.ofedDriver.initContainer.version</p></td>
 <td><p>string</p></td>
-<td><p><cite>“v0.0.3”</cite></p></td>
+<td><p><cite>“network-operator-v26.4.0-beta.3”</cite></p></td>
 <td><p>Init container image version.</p></td>
 </tr>
 <tr class="row-even"><td><p>operator.repository</p></td>
@@ -278,7 +295,7 @@ can find those below.</p>
 <tr class="row-odd"><td><p>operator.useDTK</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
-<td><p>Enable the use of Driver ToolKit to compile DOCA Drivers (OpenShift only).</p></td>
+<td><p>Enable the use of Driver ToolKit to compile DOCA-OFED Drivers (OpenShift only).</p></td>
 </tr>
 <tr class="row-even"><td><p>sriovNetworkOperator.enabled</p></td>
 <td><p>bool</p></td>
@@ -343,40 +360,50 @@ can find those below.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>node-feature-discovery.cleanupLabels</p></td>
-<td><p>bool</p></td>
-<td><p><cite>false</cite></p></td>
-<td><p>Enable labels cleanup when uninstalling NFD</p></td>
-</tr>
-<tr class="row-odd"><td><p>node-feature-discovery.enableNodeFeatureApi</p></td>
+<tr class="row-even"><td><p>node-feature-discovery.enableNodeFeatureApi</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>The Node Feature API enable communication between nfd master and worker through NodeFeature CRs. Otherwise communication is through gRPC.</p></td>
 </tr>
-<tr class="row-even"><td><p>node-feature-discovery.featureGates.NodeFeatureAPI</p></td>
+<tr class="row-odd"><td><p>node-feature-discovery.featureGates.NodeFeatureAPI</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>node-feature-discovery.gc.enable</p></td>
+<tr class="row-even"><td><p>node-feature-discovery.gc.enable</p></td>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>Specifies whether the NFD Garbage Collector should be created</p></td>
 </tr>
-<tr class="row-even"><td><p>node-feature-discovery.gc.replicaCount</p></td>
+<tr class="row-odd"><td><p>node-feature-discovery.gc.replicaCount</p></td>
 <td><p>int</p></td>
 <td><p><cite>1</cite></p></td>
 <td><p>Specifies the number of replicas for the NFD Garbage Collector</p></td>
 </tr>
-<tr class="row-odd"><td><p>node-feature-discovery.gc.serviceAccount.create</p></td>
+<tr class="row-even"><td><p>node-feature-discovery.gc.serviceAccount.create</p></td>
 <td><p>bool</p></td>
 <td><p><cite>false</cite></p></td>
 <td><p>disable creation to avoid duplicate serviceaccount creation by master spec above.</p></td>
 </tr>
-<tr class="row-even"><td><p>node-feature-discovery.gc.serviceAccount.name</p></td>
+<tr class="row-odd"><td><p>node-feature-discovery.gc.serviceAccount.name</p></td>
 <td><p>string</p></td>
 <td><p><cite>“node-feature-discovery”</cite></p></td>
 <td><p>The name of the service account for garbage collector to use. If not set and create is true, a name is generated using the fullname template and -gc suffix.</p></td>
+</tr>
+<tr class="row-even"><td><p>node-feature-discovery.image.pullPolicy</p></td>
+<td><p>string</p></td>
+<td><p><cite>“IfNotPresent”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>node-feature-discovery.image.repository</p></td>
+<td><p>string</p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/node-feature-discovery”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>node-feature-discovery.image.tag</p></td>
+<td><p>string</p></td>
+<td><p><cite>“network-operator-v26.4.0-beta.3”</cite></p></td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><p>node-feature-discovery.master</p></td>
 <td><p>yaml</p></td>
@@ -390,7 +417,12 @@ can find those below.</p>
 </td>
 <td><p>NFD master deployment configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p>node-feature-discovery.worker</p></td>
+<tr class="row-even"><td><p>node-feature-discovery.postDeleteCleanup</p></td>
+<td><p>bool</p></td>
+<td><p><cite>false</cite></p></td>
+<td><p>Enable labels cleanup when uninstalling NFD</p></td>
+</tr>
+<tr class="row-odd"><td><p>node-feature-discovery.worker</p></td>
 <td><p>yaml</p></td>
 <td><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">serviceAccount</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="c1"># disable creation to avoid duplicate serviceaccount creation by master spec</span><span class="w"></span>
@@ -443,42 +475,52 @@ can find those below.</p>
 <tbody>
 <tr class="row-even"><td><p>sriov-network-operator.images.ibSriovCni</p></td>
 <td><p>string</p></td>
-<td><p><cite>“ghcr.io/k8snetworkplumbingwg/ib-sriov-cni:v1.1.1”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/ib-sriov-cni:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>sriov-network-operator.images.operator</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator:network-operator-25.4.0-beta.1”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>sriov-network-operator.images.ovsCni</p></td>
 <td><p>string</p></td>
-<td><p><cite>“ghcr.io/k8snetworkplumbingwg/ovs-cni-plugin:v0.37.0”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/ovs-cni-plugin:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>sriov-network-operator.images.resourcesInjector</p></td>
+<tr class="row-odd"><td><p>sriov-network-operator.images.rdmaCni</p></td>
+<td><p>string</p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/rdma-cni:network-operator-v26.4.0-beta.3”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sriov-network-operator.images.resourcesInjector</p></td>
 <td><p>string</p></td>
 <td><p><cite>“ghcr.io/k8snetworkplumbingwg/network-resources-injector:v1.7.0”</cite></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>sriov-network-operator.images.sriovCni</p></td>
+<tr class="row-odd"><td><p>sriov-network-operator.images.sriovCni</p></td>
 <td><p>string</p></td>
-<td><p><cite>“ghcr.io/k8snetworkplumbingwg/sriov-cni:v2.8.1”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-cni:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>sriov-network-operator.images.sriovConfigDaemon</p></td>
+<tr class="row-even"><td><p>sriov-network-operator.images.sriovConfigDaemon</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator-config-daemon:network-operator-25.4.0-beta.1”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator-config-daemon:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>sriov-network-operator.images.sriovDevicePlugin</p></td>
+<tr class="row-odd"><td><p>sriov-network-operator.images.sriovDevicePlugin</p></td>
 <td><p>string</p></td>
-<td><p><cite>“ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.9.0”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-device-plugin:network-operator-v26.4.0-beta.3”</cite></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sriov-network-operator.images.sriovDraDriver</p></td>
+<td><p>string</p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/dra-driver-sriov:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>sriov-network-operator.images.webhook</p></td>
 <td><p>string</p></td>
-<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator-webhook:network-operator-25.4.0-beta.1”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox/sriov-network-operator-webhook:network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>sriov-network-operator.operator.admissionControllers</p></td>
@@ -560,6 +602,9 @@ can find those below.</p>
 <td><p>yaml</p></td>
 <td><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">beta.kubernetes.io/os</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;linux&quot;</span><span class="w"></span>
 <span class="nt">network.nvidia.com/operator.mofed.wait</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="w"></span>
+<span class="c1"># Enable when using together with NIC Configuration Operator to wait until</span><span class="w"></span>
+<span class="c1"># all required FW parameters are successfully applied before configuring SR-IOV</span><span class="w"></span>
+<span class="c1"># network.nvidia.com/operator.nic-configuration.wait: &quot;false&quot;</span><span class="w"></span>
 </pre></div>
 </div>
 </td>
@@ -569,57 +614,6 @@ can find those below.</p>
 <td><p>bool</p></td>
 <td><p><cite>true</cite></p></td>
 <td><p>Deploy <code class="docutils literal notranslate"><span class="pre">SriovOperatorConfig</span></code> custom resource</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="nic-configuration-operator">
-<h2>NIC Configuration Operator<a class="headerlink" href="#nic-configuration-operator" title="Permalink to this headline"></a></h2>
-<p>NIC Configuration Operator Helm chart customization options can be found <a class="reference external" href="https://github.com/Mellanox/nic-configuration-operator/blob/main/deployment/nic-configuration-operator-chart/README.md">here</a>. Following is a list of overriden values by NVIDIA Network Operator Helm Chart:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Name</p></th>
-<th class="head"><p>Type</p></th>
-<th class="head"><p>Default in NVIDIA Network Operator</p></th>
-<th class="head"><p>Notes</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>nic-configuration-operator-chart.configDaemon.image.name</p></td>
-<td><p>string</p></td>
-<td><p><cite>“nic-configuration-operator-daemon”</cite></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>nic-configuration-operator-chart.configDaemon.image.repository</p></td>
-<td><p>string</p></td>
-<td><p><cite>“ghcr.io/mellanox”</cite></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>nic-configuration-operator-chart.configDaemon.image.tag</p></td>
-<td><p>string</p></td>
-<td><p><cite>“v0.1.18”</cite></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>nic-configuration-operator-chart.operator.image.name</p></td>
-<td><p>string</p></td>
-<td><p><cite>“nic-configuration-operator”</cite></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>nic-configuration-operator-chart.operator.image.repository</p></td>
-<td><p>string</p></td>
-<td><p><cite>“ghcr.io/mellanox”</cite></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>nic-configuration-operator-chart.operator.image.tag</p></td>
-<td><p>string</p></td>
-<td><p><cite>“v0.1.18”</cite></p></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -674,13 +668,23 @@ can find those below.</p>
 </tr>
 <tr class="row-even"><td><p>maintenance-operator-chart.operator.image.repository</p></td>
 <td><p>string</p></td>
-<td><p><cite>“ghcr.io/mellanox”</cite></p></td>
+<td><p><cite>“nvcr.io/nvstaging/mellanox”</cite></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>maintenance-operator-chart.operator.image.tag</p></td>
 <td><p>string</p></td>
-<td><p><cite>“v0.2.0”</cite></p></td>
+<td><p><cite>“network-operator-v26.4.0-beta.3”</cite></p></td>
 <td></td>
+</tr>
+<tr class="row-even"><td><p>maintenance-operator-chart.operatorConfig</p></td>
+<td><p>object</p></td>
+<td><p><cite>{“deploy”:false}</cite></p></td>
+<td><p>Deploy MaintenanceOperatorConfig. Maintenance Operator might be already deployed on the cluster, in that case no need to deploy MaintenanceOperatorConfig.</p></td>
+</tr>
+<tr class="row-odd"><td><p>maintenance-operator-chart.operatorConfig.deploy</p></td>
+<td><p>bool</p></td>
+<td><p><cite>false</cite></p></td>
+<td><p>deploy MaintenanceOperatorConfig CR</p></td>
 </tr>
 </tbody>
 </table>
@@ -705,8 +709,8 @@ can find those below.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, NVIDIA.
-      <span class="lastupdated">Last updated on Apr 16, 2025.
+    <p>&#169; Copyright 2025-2026, NVIDIA.
+      <span class="lastupdated">Last updated on Apr 14, 2026.
       </span></p>
   </div>
 
