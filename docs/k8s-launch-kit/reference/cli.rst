@@ -189,7 +189,7 @@ Applies previously generated manifests to the cluster in four phases: NicCluster
 l8k validate
 ================================================================================
 
-Verifies a deployment by running three checks back-to-back: Network Operator Helm release version (compared against ``networkOperator.selectedRelease`` in ``cluster-config.yaml``), per-manifest state classification (READY / IN-PROGRESS / ERROR / MISSING via the per-Kind validator registry), and a data-plane connectivity matrix (apply the example DaemonSet, ping every rail across every pod pair). Writes a self-contained HTML report to ``<deployment-files>/verify-report.html`` by default. Exits 4 on any missing/error manifest, version mismatch, or connectivity-matrix failure. See :doc:`../workflows/validate` for full details.
+Verifies a deployment by running four checks back-to-back: Network Operator Helm release version (compared against ``networkOperator.selectedRelease`` in ``cluster-config.yaml``); per-component version cross-check that walks the live ``NicClusterPolicy`` + ``NicNodePolicy`` and confirms each section's ``.version`` field matches the catalog (catches out-of-band edits and partial upgrades the Helm check misses); per-manifest state classification (READY / IN-PROGRESS / ERROR / MISSING via the per-Kind validator registry); and a data-plane connectivity matrix (apply the example DaemonSet, ping every rail across every pod pair). Writes a self-contained HTML report to ``<deployment-files>/verify-report.html`` by default. Exits 4 on any missing/error manifest, Helm-version mismatch, component-version mismatch, or connectivity-matrix failure. See :doc:`../workflows/validate` for full details.
 
 .. list-table::
    :header-rows: 1

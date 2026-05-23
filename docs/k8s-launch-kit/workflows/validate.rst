@@ -28,7 +28,7 @@ Validate Workflow
 
 .. note::
 
-   **Use this when:** you've applied a deployment and want to confirm both the control plane (operator and CRs reconciled) and the data plane (pods on different nodes can reach each other on every rail). ``l8k validate`` runs three checks back-to-back and emits an HTML report alongside the text/JSON output.
+   **Use this when:** you've applied a deployment and want to confirm both the control plane (operator and CRs reconciled, component versions match the requested release) and the data plane (pods on different nodes can reach each other on every rail). ``l8k validate`` runs four checks back-to-back and emits an HTML report alongside the text/JSON output.
 
 ================================================================================
 Run Validation
@@ -64,6 +64,18 @@ The check is **skipped** (with a clear reason in the output) when:
 - ``cluster-config.yaml`` is missing or doesn't declare ``networkOperator.selectedRelease``.
 - The selected release is not in the embedded catalog.
 - No matching Helm release Secret is found in the operator namespace (e.g., the operator was installed via Argo CD or kubectl rather than Helm).
+
+Component versions in NicClusterPolicy and NicNodePolicy
+--------------------------------------------------------
+
+The Helm-release check confirms the *operator* matches the requested release line. Launch Kit also reads the live ``NicClusterPolicy`` and every ``NicNodePolicy`` and verifies that each component's ``.version`` field matches the catalog. This catches drift the Helm check can miss: out-of-band ``kubectl edit`` changes, partial upgrades, hand-rolled chart values that pinned an older image tag.
+
+Sections checked:
+
+- ``NicClusterPolicy`` --- ``nicConfigurationOperator.operator``, ``nicConfigurationOperator.configurationDaemon``, ``nvIpam``, ``secondaryNetwork.cniPlugins``, ``secondaryNetwork.multus``, and ``ofedDriver`` (when the 26.1 model is used).
+- ``NicNodePolicy`` --- ``ofedDriver``, ``rdmaSharedDevicePlugin``, ``sriovDevicePlugin``.
+
+Each row is reported as ``MATCH`` or ``MISMATCH`` with the expected and actual versions side by side. A mismatch fails ``l8k validate`` with exit code 4, the same as a missing manifest or Helm-version mismatch. The check is **skipped** (no impact on exit code) when ``selectedRelease`` is empty, when the catalog doesn't carry that release line, or when the cluster has no ``NicClusterPolicy`` (``l8k deploy`` hasn't been run yet).
 
 Manifest state
 --------------
@@ -106,8 +118,8 @@ Report sections:
 - **Profile** — fabric, deployment type, multirail, and Spectrum-X (version / multiplane mode / number of planes) when enabled. When ``cluster-config.yaml`` doesn't carry an explicit ``profile:`` block, the profile is inferred from the Kinds present in the rendered deployment manifests.
 - **Node groups** — one card per ``clusterConfig[]`` entry: identifier, machine type, GPU type, link type, node selector, worker-node list, capability pills, and east-west / north-south PF tables (PCI, device ID, rail, netdev, RDMA device, PSID, part number, NUMA node, connected GPU, GPU proximity). Preset deviations are rendered as a sub-table when present.
 - **Cluster nodes** — name, ``nvidia.kubernetes-launch-kit.machine`` and ``.gpu`` labels, role.
-- **Network Operator release** — selected vs. deployed appVersion.
-- **Manifest state** — one row per CR with a state badge and the validator's reason. Two expandable dropdowns per row: **Details** (the SR-IOV per-node breakdown, the NCP appliedStates components, etc.) and **Live YAML** (the cluster's current view of the object, ``managedFields`` stripped, status kept).
+- **Network Operator release** — selected vs. deployed appVersion. When the component-version cross-check ran, a sub-table lists every ``NicClusterPolicy`` / ``NicNodePolicy`` section's ``MATCH`` / ``MISMATCH`` against the catalog (expected vs. actual side by side).
+- **Manifest state** — one row per CR with a state badge and the validator's reason. Two expandable rows render full-width directly below each manifest row: **Details** (the SR-IOV per-node breakdown, the NCP appliedStates components, etc.) and **Live YAML** (the cluster's current view of the object, ``managedFields`` stripped, status kept). Manifests with nothing to expand render only the data row.
 - **Connectivity matrix** — per-rail ``src × dst`` grids with pass/fail/skipped color-coded cells, plus the cross-rail canary list.
 - **Warnings** — bulleted rollup ("connectivity matrix skipped because cluster has in-progress manifests", "SriovNetworkNodePolicy/rail-0 is in-progress on 2/3 nodes", etc.).
 
