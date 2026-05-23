@@ -52,11 +52,26 @@ You can also fold the deploy into the generate step by adding ``--deploy`` to ``
 Deployment Ordering
 ================================================================================
 
-Launch Kit applies manifests in the following order to ensure dependencies are satisfied:
+Launch Kit applies manifests in four phases. The first two block on reconciliation because everything else depends on them; the last two batch the remaining manifests so controllers reconcile concurrently:
 
-#. ``NicClusterPolicy`` (cluster-wide components: Multus, CNI, NV-IPAM, operators). Wait for readiness.
-#. ``NicNodePolicy`` per group (OFED driver, device plugins). Wait for readiness.
-#. Remaining manifests --- network resources (``SriovNetwork``, ``HostDeviceNetwork``, etc.), IP pools, and example workloads.
+#. **NicClusterPolicy** --- applied first, then awaited until the controller reports ``READY``. Per-component ``appliedStates[]`` are surfaced in the progress output ("ready: 7/12; pending: state-OFED, state-multus-cni, …") so an operator sees exactly which component is the laggard.
+#. **NicNodePolicy** --- applied per group, awaited per policy (OFED driver, device plugins land here).
+#. **Remaining manifests** --- every other CR (``SriovNetwork``, ``HostDeviceNetwork``, ``CIDRPool``, ``SpectrumXRailPoolConfig``, …) is applied in a single pass without per-manifest waits, so controllers reconcile concurrently.
+#. **Verify** --- each manifest from phase 3 is polled until it reaches a terminal state. The four-state classification (READY / IN-PROGRESS / ERROR / MISSING) and per-Kind cross-checks (e.g., the SR-IOV silent-failure case where ``syncStatus=Succeeded`` but ``pfNames`` matched zero interfaces) are shared with :doc:`l8k validate <validate>`.
+
+.. note::
+
+   Example workload manifests (filenames matching ``*example*``) are **not** applied by ``l8k deploy``. They are fixtures consumed by the connectivity matrix in ``l8k validate --connectivity`` (or ``l8k deploy --verify``, see below) and are deployed only as part of that ping-matrix phase.
+
+================================================================================
+Deploy-wide Timeout
+================================================================================
+
+``l8k deploy`` has no per-manifest deadline. Pass ``--deploy-timeout <duration>`` to bound the whole apply + reconciliation phase end-to-end (e.g., ``45m``, ``2h``). Without the flag, deploy polls until every manifest reaches a terminal state or the user cancels --- the right default for SR-IOV configuration on large clusters where a single ``SriovNetworkNodePolicy`` reconciliation can outlast any small per-manifest budget.
+
+.. code-block:: bash
+
+   l8k deploy --deploy-timeout 90m
 
 ================================================================================
 Dry-Run Mode
@@ -71,10 +86,22 @@ Preview what would be deployed without making changes:
 Dry-run mode is recommended before any first deployment and before production changes.
 
 ================================================================================
-Verifying the Deployment
+End-to-End Verification (--verify)
 ================================================================================
 
-After deploying, verify that operator pods, OFED driver pods, and example workloads are running:
+Pass ``--verify`` to chain a full data-plane verification right after a successful apply: ``l8k deploy --verify`` applies the manifests, waits for every controller to reconcile, then runs the connectivity ping matrix from :doc:`l8k validate <validate>` (apply the example DaemonSet, wait for every pod to be ``Ready``, ping every rail across every pod pair, clean up).
+
+.. code-block:: bash
+
+   l8k deploy --verify
+
+The matrix's exit code propagates: a failed ping causes ``l8k deploy --verify`` to exit non-zero even though the manifests applied successfully. Combine with ``--keep`` (passed to validate) when debugging.
+
+================================================================================
+Manual Verification
+================================================================================
+
+You can also inspect the deployment manually:
 
 .. code-block:: bash
 

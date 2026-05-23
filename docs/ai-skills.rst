@@ -55,9 +55,9 @@ Each skill is a self-contained Markdown document in the `k8s-launch-kit reposito
    * - ``k8s-launch-kit-dryrun``
      - Wraps ``l8k generate --dry-run``: previews what would land on the cluster without applying.
    * - ``k8s-launch-kit-deploy``
-     - Wraps ``l8k deploy``: applies pre-generated manifests in dependency order.
+     - Wraps ``l8k deploy``: applies pre-generated manifests in four phases (NicClusterPolicy → NicNodePolicy → remaining batch → verify reconciliation). Supports ``--verify`` to chain the data-plane connectivity matrix straight after a successful apply, and ``--deploy-timeout`` to bound the whole run end-to-end.
    * - ``k8s-launch-kit-validate``
-     - Wraps ``l8k validate``: confirms the deployed Network Operator matches the selected release and every rendered manifest is present.
+     - Wraps ``l8k validate``: classifies every manifest's cluster state (READY / IN-PROGRESS / ERROR / MISSING), runs a connectivity ping matrix between the example DaemonSet's pods on every rail (default ON; ``--connectivity=false`` to skip), and writes an HTML validation report to ``<deployment-files>/verify-report.html``.
    * - ``k8s-launch-kit-pipeline``
      - End-to-end orchestration (discover → generate → deploy) for greenfield clusters.
    * - ``k8s-launch-kit-troubleshoot``
