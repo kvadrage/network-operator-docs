@@ -128,7 +128,7 @@ Changes and New Features
      - | - Added support for Kubernetes >= 1.21 and <=1.27
        | - Added support for NicClusterPolicy update and removal
        | - Added support for OpenShift Container Platform 4.11 and 4.12
-   * - 23.4.0
+   * - 23.1.0
      - | - Added a calendar versioning schema for Network Operator releases to better align with the NVIDIA GPU Operator
        | - Added support for the following operating systems and Kubernetes environments:
        |     - RHEL 8.4 and 8.6 with CRI-O container runtime
