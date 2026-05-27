@@ -21,20 +21,31 @@
 NVIDIA Network Operator |network-operator-version|
 **************************************************
 
+*Enabling AI Networking in Kubernetes.*
 
 The NVIDIA Network Operator simplifies the provisioning and management of NVIDIA networking resources in a Kubernetes cluster.
 The operator automatically installs the required host networking software - bringing together all the needed components to provide high-speed network connectivity.
 These components include the NVIDIA networking driver, Kubernetes device plugin, CNI plugins, IP address management (IPAM) plugin and others.
-The NVIDIA Network Operator works in conjunction with the NVIDIA GPU Operator to deliver high-throughput, low-latency networking for scale-out, GPU computing clusters.
+The NVIDIA Network Operator works in conjunction with the `NVIDIA GPU Operator <https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/>`_ to deliver high-throughput, low-latency networking for scale-out, GPU computing clusters.
 
 A Helm chart is provided for easily deploying the Network operator in a cluster to provision the host software on NVIDIA-enabled nodes.
+
+.. note::
+
+   **What's new in 26.4.0**
+
+   * **KubeVirt SR-IOV passthrough** — accelerated East-West networking for VM workloads on vanilla Kubernetes. See :doc:`KubeVirt SR-IOV Integration <kubevirt>`.
+   * **Spectrum-X RA 2.2 alignment** — multi-plane fabric with topology-aware pod placement via DRA, plus simplified config generation through the K8s LaunchKit.
+   * **Dynamic Resource Allocation (DRA) SR-IOV driver** — Kubernetes-native VF allocation for SR-IOV workloads. See :doc:`DRA SR-IOV Driver <dra-sriov-driver/dra-sriov-driver>`.
+
+   For the full list of changes, see the :doc:`release-notes`.
 
 ===================
 Networking Features
 ===================
 
 **RDMA Support**
-  Remote Direct Memory Access (RDMA) for memory-to-memory data transfers that bypass the CPU and kernel networking stack. Supports InfiniBand and RDMA over Converged Ethernet (RoCE) protocols.
+  Remote Direct Memory Access (RDMA) for memory-to-memory data transfers that bypass the CPU and kernel networking stack. Supports InfiniBand on NVIDIA Quantum-X fabrics and RDMA over Converged Ethernet (RoCE) on NVIDIA Spectrum-X fabrics.
 
 **SR-IOV Virtualization**
   Single Root I/O Virtualization technology that partitions network interface cards into multiple Virtual Functions (VFs) for hardware-level isolation and performance.
@@ -58,29 +69,39 @@ See the :doc:`platform-support` page for supported hardware and software.
 Use Cases
 =========
 
-**High-Performance Computing (HPC)**: Scientific simulations, modeling applications, and distributed computing workloads
+**AI Training at Scale**: Distributed training across multi-GPU, multi-node clusters, with GPUDirect RDMA between GPUs and NICs for low-latency East-West traffic.
 
-**Machine Learning**: Distributed training and inference workloads across multiple GPU nodes
+**AI Inference and Generative AI**: Multi-node serving of large language and multimodal models, where tensor and pipeline parallelism depend on accelerated GPU-to-GPU networking.
 
-**Data Processing**: Database systems, analytics platforms, and storage applications requiring high network throughput
+**Telco CNFs and DPDK Workloads**: Cloud-native network functions and DPDK-accelerated user-plane applications using SR-IOV for line-rate packet processing.
 
-**Legacy Applications**: Existing applications that require direct access to networking hardware
+**Media and Broadcast**: Containerized live-broadcast pipelines on Kubernetes and OpenShift using NVIDIA Rivermax and uncompressed SMPTE ST 2110 over SR-IOV, with PTP-synchronized timing. Foundational to NVIDIA Holoscan for Media.
 
-=================
-License Agreement
-=================
+**Edge AI and Sensor Streaming**: Low-latency sensor ingest over SR-IOV and RDMA for real-time inference on NVIDIA IGX Orin and Grace ARM platforms.
 
-The NVIDIA Network Operator is licensed under Apache 2.0 and contributions are accepted with a DCO. 
-See the contributing document for more information on how to contribute and the release artifacts.
+**High-Performance Computing (HPC)**: Scientific simulations, modeling, and distributed computing workloads.
+
+**Data Processing**: Database systems, analytics platforms, and storage applications requiring high network throughput.
+
+==================
+License Agreements
+==================
+
+The NVIDIA Network Operator source code is licensed under Apache 2.0 and contributions are accepted with a DCO. See the `contributing document <https://github.com/Mellanox/network-operator/blob/master/CONTRIBUTING.md>`_ for more information on how to contribute and the release artifacts.
+
+NVIDIA Network Operator container images distributed via `NVIDIA NGC <https://catalog.ngc.nvidia.com/>`_ are subject to the NVIDIA software license terms. Refer to the corresponding container listing on NGC for the applicable license; by pulling and using these containers you accept those terms.
 
 ==========
 Learn More
 ==========
 
-The Network Operator is open-source. 
-For more information on contributions and release artifacts, see the `GitHub repo <https://github.com/Mellanox/network-operator>`_.
+The Network Operator is open-source. For more information on contributions and release artifacts, see the `GitHub repo <https://github.com/Mellanox/network-operator>`_.
 
-For detailed deployment instructions and examples:
+For detailed deployment, operational, and release information:
 
-- :doc:`quick-start/quick-start-k8s`: Quick deployment guide with common configurations  
+- :doc:`release-notes`: What changed in this release, known issues, and upgrade considerations
+- :doc:`platform-support`: Supported hardware, operating systems, and Kubernetes platforms
+- :doc:`quick-start/quick-start-k8s`: Quick deployment guide with common configurations
 - :doc:`deployment-guide-kubernetes`: Detailed deployment scenarios
+- :doc:`life-cycle-management`: Upgrade procedures and lifecycle guidance
+- :doc:`troubleshooting/troubleshooting`: Troubleshooting common issues
