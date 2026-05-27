@@ -38,6 +38,7 @@
 .. |sriovnetop-sriov-device-plugin-repository| replace:: nvcr.io/nvstaging/mellanox
 .. |doca-telemetry-version| replace:: 1.24.3-doca3.3.0-host
 .. |doca-telemetry-repository| replace:: nvcr.io/nvidia/doca
+.. |doca-workload-image| replace:: nvcr.io/nvidia/doca/doca:3.1.0-full-rt-host
 .. |node-feature-discovery-version| replace:: network-operator-v26.4.0-rc.1
 .. |node-feature-discovery-repository| replace:: nvcr.io/nvstaging/mellanox
 .. |doca-driver-build-commit| replace:: da70339366f929bd1d1f2a617636dab7ff445fbe

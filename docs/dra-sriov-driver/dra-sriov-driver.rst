@@ -281,6 +281,7 @@ Virtual Function with its attributes:
 ================================
 
 .. code-block:: yaml
+   :substitutions:
 
    ---
    apiVersion: v1
@@ -304,7 +305,7 @@ Virtual Function with its attributes:
      restartPolicy: Never
      containers:
      - name: rdma-test
-       image: nvcr.io/nvidia/doca/doca:3.1.0-full-rt-host
+       image: |doca-workload-image|
        command: ["/bin/bash", "-c", "sleep infinity"]
        securityContext:
          capabilities:
@@ -341,7 +342,7 @@ Virtual Function with its attributes:
      restartPolicy: Never
      containers:
      - name: rdma-test
-       image: nvcr.io/nvidia/doca/doca:3.1.0-full-rt-host
+       image: |doca-workload-image|
        command: ["/bin/bash", "-c", "sleep infinity"]
        securityContext:
          capabilities:
