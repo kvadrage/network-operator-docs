@@ -291,18 +291,14 @@ The deployment ordering ensures dependency resolution: NicClusterPolicy first (w
 NIC Interface Name Templates
 ================================================================================
 
-When ``nicConfigurationOperator.deployNicInterfaceNameTemplate`` is set to ``true`` in the configuration, Launch Kit deploys ``NicInterfaceNameTemplate`` CRs to rename NIC interfaces to predictable, rail-based names using udev rules. This setting means "enable when needed" rather than "always enable" --- templates are deployed only when:
-
-- Combined groups have cross-rail PCI address conflicts (the same PCI address appears at different rail positions across source groups). PCI addresses alone cannot identify which interface corresponds to which rail in this case, so the template provides a consistent rail-based mapping.
-- The ``rdma_shared`` profile is used and PFs have empty ``networkInterface`` fields (the shared device plugin needs interface names).
-- Spectrum-X is enabled (always).
+``NicInterfaceNameTemplate`` CRs rename NIC interfaces to predictable, rail-based names using udev rules. Launch Kit deploys them by default for **every** profile and every cluster shape --- not only when PCI addresses are ambiguous. The benefit is uniform interface names across server SKUs (``rdma_r0``, ``eth_r1``, …): pod manifests, NetworkAttachmentDefinitions, and operator scripts can reference one stable name per rail regardless of which vendor chassis the pod lands on, and reboots that re-enumerate PCI no longer break selectors.
 
 Naming conventions:
 
 - Standard profiles: ``rdma_r%rail%``, ``eth_r%rail%`` (e.g., ``rdma_r0``, ``eth_r1``).
 - Spectrum-X profiles: ``roce_p%plane%_r%rail%``, ``eth_p%plane%_r%rail%`` (e.g., ``roce_p0_r2``).
 
-When all machines in a group have identical PCI addresses per rail, name templates are not deployed and PCI addresses identify interfaces directly.
+To opt out and reference interfaces by their original PCI addresses instead, set ``nicConfigurationOperator.deployNicInterfaceNameTemplate: false`` in your ``cluster-config.yaml`` (or ``l8k-config.yaml``). This is rarely needed --- the renamed names are a strict superset of what PCI selectors can express.
 
 ================================================================================
 North-South vs East-West Traffic

@@ -1,5 +1,5 @@
 .. license-header
-  SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
   SPDX-License-Identifier: Apache-2.0
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
 
 .. headings # #, * *, =, -, ^, "
 
-**************************
-NIC Configuration Operator
-**************************
+*****************
+NVIDIA Spectrum-X
+*****************
 
 .. toctree::
   :maxdepth: 1
   :titlesonly:
 
-   NIC Firmware Configuration <nic-fw-configuration.rst>
-   Configuration Details <configuration-details.rst>
+   Quick Start <quick-start.rst>
+   Spectrum-X NIC Configuration <spectrum-x-configuration.rst>
    CRD API Reference <crds.rst>

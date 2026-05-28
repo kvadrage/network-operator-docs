@@ -37,7 +37,7 @@ Two reference architectures are supported, selected by Network Operator release:
 - **RA2.2** (current) --- requires ``--network-operator-release 26.4``. Uses ``SpectrumXRailPoolConfig`` (v1alpha2 CRD).
 - **RA2.1** (previous) --- requires ``--network-operator-release 26.1``. Uses ``SriovNetworkPoolConfig`` + ``SriovNetworkNodePolicy`` + ``OVSNetwork`` with NV-IPAM glue.
 
-For deeper Spectrum-X background, see :doc:`Spectrum-X Configuration <../../nic-conf-operator/spectrum-x-configuration>`.
+For deeper Spectrum-X background, see :doc:`Spectrum-X Configuration <../../spectrum-x/spectrum-x-configuration>`.
 
 ================================================================================
 Multiplane Modes
@@ -150,6 +150,6 @@ See Also
 ================================================================================
 
 - :doc:`Deployment Profiles <profiles>` --- decision matrix
-- :doc:`Spectrum-X Configuration <../../nic-conf-operator/spectrum-x-configuration>` --- background and CRD details
+- :doc:`Spectrum-X Configuration <../../spectrum-x/spectrum-x-configuration>` --- background and CRD details
 - :doc:`Generate Workflow <../workflows/generate>` --- generation details
 - :doc:`Configuration Reference <../reference/config>` --- ``spectrumX`` config section

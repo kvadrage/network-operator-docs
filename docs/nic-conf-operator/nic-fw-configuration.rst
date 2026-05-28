@@ -492,4 +492,4 @@ The ``NicInterfaceNameTemplate`` CRD allows you to define custom naming patterns
 
 The operator deploys udev rules to the host to rename network and RDMA interfaces according to the specified naming template. The template uses placeholders (``%nic_id%``, ``%plane_id%``, ``%rail_id%``) to construct device names based on the NIC topology.
 
-For full details on NicInterfaceNameTemplate configuration, including multiplane modes and example udev rules, refer to :doc:`Spectrum-X Configuration <spectrum-x-configuration>`.
+For full details on NicInterfaceNameTemplate configuration, including multiplane modes and example udev rules, refer to :doc:`Spectrum-X Configuration <../spectrum-x/spectrum-x-configuration>`.
