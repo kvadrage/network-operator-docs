@@ -16,37 +16,59 @@
 
 .. headings # #, * *, =, -, ^, "
 
-**********************
-Spectrum-X Quick Start
-**********************
+*********************************
+Spectrum-X Kubernetes Quick Start
+*********************************
 
 .. note::
 
-   You can automate the configuration of these examples with NVIDIA Kubernetes Launch Kit.
-   For more details, see :doc:`Configuration Assistance with Kubernetes Launch Kit <../k8s-launch-kit/k8s-launch-kit>`.
+   These walkthroughs target **Spectrum-X RA 2.2** on **Network Operator 26.4.0**.
+   For the RA-to-release mapping and other RAs, see
+   :doc:`NVIDIA Spectrum-X <spectrum-x>`. For supported platforms (operating
+   systems, Kubernetes distributions, NIC hardware), see
+   :doc:`Platform Support <../platform-support>`.
 
-Three end-to-end examples are provided, covering the main Spectrum-X RA2.2 topologies. Each example walks through the same sequence of resources — Helm install, ``NicClusterPolicy``, ``NicInterfaceNameTemplate``, ``NicConfigurationTemplate``, ``CIDRPool``, ``SpectrumXRailPoolConfig``, and a test pod — adapted to the chosen multiplane mode and NIC family. Pick the example that matches your hardware and topology:
+   On Network Operator 26.4.0, **Single-Plane** and **Software Multiplane**
+   (``swplb``) deployments on BlueField-3 SuperNICs, ConnectX-7 NICs, and
+   ConnectX-8 SuperNICs are GA. **Hardware Multiplane** (``hwplb``) is tech
+   preview only and is not part of the validated Spectrum-X Reference
+   Architecture. For background on the operators and CNIs each walkthrough
+   relies on, see :doc:`Architecture and Components <components>`.
+
+.. tip::
+
+   The configuration in each walkthrough can be automated end-to-end with
+   NVIDIA Kubernetes Launch Kit — see
+   :doc:`Configuration Assistance with Kubernetes Launch Kit <../k8s-launch-kit/k8s-launch-kit>`.
+
+Pick the walkthrough that matches your hardware and target topology. Each one
+installs Network Operator via Helm, applies the Spectrum-X CRDs, and deploys a
+test pod — adapted to the chosen multiplane mode and NIC family.
 
 .. list-table::
    :header-rows: 1
-   :widths: 25 15 15 45
+   :widths: 22 12 20 22 24
 
-   * - Example
+   * - Walkthrough
      - Multiplane mode
-     - Supported NICs
-     - When to use
+     - NICs
+     - GPU platforms
+     - Use when
    * - :doc:`Single Plane <quick-start-single-plane>`
      - ``none``
-     - BF3 SuperNIC, ConnectX-8, ConnectX-9
-     - Simplest setup: one PF per rail, one ``CIDRPool`` per rail, one network per rail. Best starting point for BlueField-3 SuperNIC deployments.
-   * - :doc:`Multiplane with Software Load Balancing <quick-start-swplb>`
+     - BlueField-3 SuperNIC, ConnectX-7 NIC, ConnectX-8 SuperNIC
+     - H100/H200/B200 (BlueField-3 SuperNIC), GB200 (ConnectX-7 NIC)
+     - One PF per rail. Simplest setup. ConnectX-8 SuperNIC also supports single-plane configuration.
+   * - :doc:`Software Multiplane <quick-start-swplb>`
      - ``swplb``
-     - BF3 SuperNIC, ConnectX-8, ConnectX-9
-     - Software Packet Load Balancing: each rail is split into multiple planes, with a separate ``CIDRPool`` and a separate ``railTopology`` entry per (rail, plane) combination.
-   * - :doc:`Multiplane with Hardware Load Balancing <quick-start-hwplb>`
+     - ConnectX-8 SuperNIC
+     - B300, GB300
+     - Software Plane Load Balancing across planes. Set ``numberOfPlanes: 2`` (Dual-Plane) or ``4`` (Quad-Plane, B300 only).
+   * - :doc:`Hardware Multiplane <quick-start-hwplb>` *(tech preview)*
      - ``hwplb``
-     - ConnectX-8, ConnectX-9
-     - Hardware Packet Load Balancing: NIC LAG handles the per-plane fan-out, so each rail still uses a single ``CIDRPool`` while exposing multiple per-plane PFs. Highest performance; ConnectX-8 / ConnectX-9 only.
+     - ConnectX-8 SuperNIC
+     - B300, GB300
+     - Same as ``swplb`` but Plane Load Balancing happens in the NIC hardware. **Tech preview; not RA-validated.**
 
 .. toctree::
    :maxdepth: 1
@@ -54,5 +76,5 @@ Three end-to-end examples are provided, covering the main Spectrum-X RA2.2 topol
    :hidden:
 
    Single Plane <quick-start-single-plane.rst>
-   Multiplane with Software Load Balancing <quick-start-swplb.rst>
-   Multiplane with Hardware Load Balancing <quick-start-hwplb.rst>
+   Software Multiplane <quick-start-swplb.rst>
+   Hardware Multiplane <quick-start-hwplb.rst>

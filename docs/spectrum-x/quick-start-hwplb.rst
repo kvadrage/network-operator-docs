@@ -17,21 +17,36 @@
 .. headings # #, * *, =, -, ^, "
 .. include:: ../common/vars.rst
 
-*********************************
-Spectrum-X Quick Start (hwplb)
-*********************************
+*********************************************************
+Hardware Multiplane Spectrum-X Quick Start (Tech Preview)
+*********************************************************
 
 .. contents:: On this page
    :depth: 3
    :local:
    :backlinks: none
 
+.. warning::
+
+   Hardware Multiplane (``hwplb``) is **tech preview** in Network Operator
+   26.4.0 and is **not part of the validated Spectrum-X Reference
+   Architecture**. Use only for evaluation purposes.
+
 .. note::
 
    You can automate the configuration of this use case with NVIDIA Kubernetes Launch Kit.
    For more details, see :doc:`Configuration Assistance with Kubernetes Launch Kit <../k8s-launch-kit/k8s-launch-kit>`.
 
-The following example uses **RA2.2** with ``hwplb`` multiplane mode. ``hwplb`` is supported only on ConnectX-8 (``nicType: 1023``) and ConnectX-9 (``nicType: 1025``), and only with RA2.2. ``TODO_*`` values must be replaced with cluster-specific values before applying.
+This walkthrough deploys a **Hardware Multiplane** Spectrum-X cluster on
+Kubernetes using **ConnectX-8 SuperNICs** (``nicType: 1023``). NIC LAG and
+**Hardware Plane Load Balancing** (``hwplb``) handle per-plane fan-out at
+the hardware layer, so each rail still uses a single ``CIDRPool`` while
+exposing multiple per-plane PFs. Used on **B300**
+and **GB300** platforms — set ``numberOfPlanes: 2`` for Dual-Plane or
+``numberOfPlanes: 4`` for Quad-Plane (B300 only). The configuration uses
+RA 2.2 with ``multiplaneMode: hwplb``. The example below uses
+``numberOfPlanes: 2``. Replace ``TODO_*`` values with your cluster-specific
+values before applying.
 
 ================================
 Step 1: Install the Helm Chart
@@ -147,7 +162,7 @@ Map PCI addresses to rail/plane indices and define interface naming. Replace ``T
 Step 4: NicConfigurationTemplate
 ==================================
 
-Configure the NICs for Spectrum-X RA2.2 with ``hwplb`` multiplane mode. ``hwplb`` requires ConnectX-8 (``nicType: 1023``) or ConnectX-9 (``nicType: 1025``); it is not supported on BlueField-3 SuperNIC.
+Configure the ConnectX-8 SuperNICs for Spectrum-X RA 2.2 with ``hwplb`` multiplane mode. ``hwplb`` requires ConnectX-8 SuperNIC (``nicType: 1023``); it is not supported on BlueField-3 SuperNIC or ConnectX-7 NIC. For Quad-Plane (B300 only), set ``numberOfPlanes: 4``.
 
 .. code-block:: yaml
 
@@ -160,7 +175,7 @@ Configure the NICs for Spectrum-X RA2.2 with ``hwplb`` multiplane mode. ``hwplb`
      nodeSelector:
        feature.node.kubernetes.io/network-sriov.capable: "true"
      nicSelector:
-       nicType: "1023"  # "1025" for ConnectX-9
+       nicType: "1023"  # ConnectX-8 SuperNIC (B300, GB300)
      template:
        numVfs: 1
        linkType: Ethernet

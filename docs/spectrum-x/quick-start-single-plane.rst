@@ -17,9 +17,9 @@
 .. headings # #, * *, =, -, ^, "
 .. include:: ../common/vars.rst
 
-***************************************************
-Spectrum-X Quick Start (single plane, BF3 SuperNIC)
-***************************************************
+***********************************
+Single-Plane Spectrum-X Quick Start
+***********************************
 
 .. contents:: On this page
    :depth: 3
@@ -31,7 +31,16 @@ Spectrum-X Quick Start (single plane, BF3 SuperNIC)
    You can automate the configuration of this use case with NVIDIA Kubernetes Launch Kit.
    For more details, see :doc:`Configuration Assistance with Kubernetes Launch Kit <../k8s-launch-kit/k8s-launch-kit>`.
 
-The following example uses **RA2.2** with single-plane configuration (``multiplaneMode: none``, ``numberOfPlanes: 1``) on **BlueField-3 SuperNIC** (``nicType: a2dc``). The same single-plane configuration also works on ConnectX-8 and ConnectX-9 — change ``nicType`` accordingly. ``TODO_*`` values must be replaced with cluster-specific values before applying.
+This walkthrough deploys a **Single-Plane** Spectrum-X cluster on Kubernetes:
+one PF per rail, one ``CIDRPool`` per rail, one network per rail. Used on
+**HGX H100/H200/B200** platforms (BlueField-3 SuperNIC, ``nicType: a2dc``) and
+**GB200 NVL72** platforms (ConnectX-7 NIC, ``nicType: 1021``).
+**ConnectX-8 SuperNIC** (``nicType: 1023``) also supports single-plane configuration —
+useful if you want a single-plane setup on B300/GB300 hardware. The
+configuration uses RA 2.2 with ``multiplaneMode: none`` and
+``numberOfPlanes: 1``. The example below uses BlueField-3 SuperNIC; change
+``nicType`` for other NICs. Replace ``TODO_*`` values with your
+cluster-specific values before applying.
 
 ================================
 Step 1: Install the Helm Chart
@@ -100,6 +109,8 @@ Enable the NIC Configuration Operator, NV-IPAM, Spectrum-X Operator (with XPlane
        image: spectrum-x-operator
        repository: |network-operator-repository|
        version: |spectrumxop-version|
+       # xPlane is only used when multiplaneMode=hwplb (Hardware Multiplane).
+       # Including it here lets you flip multiplaneMode without re-applying NicClusterPolicy.
        xPlane:
          image: xplane
          repository: |network-operator-repository|
@@ -122,7 +133,7 @@ Enable the NIC Configuration Operator, NV-IPAM, Spectrum-X Operator (with XPlane
 Step 3: NicInterfaceNameTemplate
 ==================================
 
-Map PCI addresses to rails and define interface naming. With single-plane configuration there is one PF per NIC, so ``pfsPerNic`` is ``1`` and ``%plane_id%`` is always ``0``. Replace ``TODO_PCI_*`` with the PCI addresses of the BF3 SuperNICs on your nodes.
+Map PCI addresses to rails and define interface naming. With single-plane configuration there is one PF per NIC, so ``pfsPerNic`` is ``1`` and ``%plane_id%`` is always ``0``. Replace ``TODO_PCI_*`` with the PCI addresses of the BlueField-3 SuperNICs on your nodes.
 
 .. code-block:: yaml
 
@@ -147,7 +158,7 @@ Map PCI addresses to rails and define interface naming. With single-plane config
 Step 4: NicConfigurationTemplate
 ==================================
 
-Configure the BF3 SuperNICs for Spectrum-X RA2.2 in single-plane mode.
+Configure the NICs for Spectrum-X RA 2.2 in single-plane mode. Use ``nicType: a2dc`` for BlueField-3 SuperNIC (HGX H100/H200/B200), ``nicType: 1021`` for ConnectX-7 NIC (GB200), or ``nicType: 1023`` for ConnectX-8 SuperNIC.
 
 .. code-block:: yaml
 
@@ -160,7 +171,7 @@ Configure the BF3 SuperNICs for Spectrum-X RA2.2 in single-plane mode.
      nodeSelector:
        feature.node.kubernetes.io/network-sriov.capable: "true"
      nicSelector:
-       nicType: "a2dc"  # BlueField-3 SuperNIC. "1023" for ConnectX-8; "1025" for ConnectX-9.
+       nicType: "a2dc"  # BlueField-3 SuperNIC (HGX H100/H200/B200). Use "1021" for ConnectX-7 NIC (GB200) or "1023" for ConnectX-8 SuperNIC.
      template:
        numVfs: 1
        linkType: Ethernet

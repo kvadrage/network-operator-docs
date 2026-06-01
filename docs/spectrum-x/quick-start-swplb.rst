@@ -17,9 +17,9 @@
 .. headings # #, * *, =, -, ^, "
 .. include:: ../common/vars.rst
 
-*********************************
-Spectrum-X Quick Start (swplb)
-*********************************
+******************************************
+Software Multiplane Spectrum-X Quick Start
+******************************************
 
 .. contents:: On this page
    :depth: 3
@@ -31,7 +31,15 @@ Spectrum-X Quick Start (swplb)
    You can automate the configuration of this use case with NVIDIA Kubernetes Launch Kit.
    For more details, see :doc:`Configuration Assistance with Kubernetes Launch Kit <../k8s-launch-kit/k8s-launch-kit>`.
 
-The following example uses **RA2.2** with ``swplb`` multiplane mode. ``swplb`` is supported on ConnectX-8, ConnectX-9, and BlueField-3 SuperNIC. ``TODO_*`` values must be replaced with cluster-specific values before applying.
+This walkthrough deploys a **Software Multiplane** Spectrum-X cluster on
+Kubernetes using **ConnectX-8 SuperNICs** (``nicType: 1023``). Each SuperNIC
+is split into multiple PFs, each assigned to a separate plane, and the
+software stack performs **Software Plane Load Balancing** (``swplb``) across
+them. Used on **B300** and **GB300** platforms — set ``numberOfPlanes: 2``
+for Dual-Plane or ``numberOfPlanes: 4`` for Quad-Plane (B300 only). The
+configuration uses RA 2.2 with ``multiplaneMode: swplb``. The example below
+uses ``numberOfPlanes: 2``. Replace ``TODO_*`` values with your
+cluster-specific values before applying.
 
 ================================
 Step 1: Install the Helm Chart
@@ -100,6 +108,8 @@ Enable the NIC Configuration Operator, NV-IPAM, Spectrum-X Operator (with XPlane
        image: spectrum-x-operator
        repository: |network-operator-repository|
        version: |spectrumxop-version|
+       # xPlane is only used when multiplaneMode=hwplb (Hardware Multiplane).
+       # Including it here lets you flip multiplaneMode without re-applying NicClusterPolicy.
        xPlane:
          image: xplane
          repository: |network-operator-repository|
@@ -147,7 +157,7 @@ Map PCI addresses to rail/plane indices and define interface naming. Replace ``T
 Step 4: NicConfigurationTemplate
 ==================================
 
-Configure the NICs for Spectrum-X RA2.2 with ``swplb`` multiplane mode. ``swplb`` is supported on ConnectX-8 (``nicType: 1023``), ConnectX-9 (``nicType: 1025``), and BlueField-3 SuperNIC (``nicType: a2dc``).
+Configure the ConnectX-8 SuperNICs for Spectrum-X RA 2.2 with ``swplb`` multiplane mode. For Quad-Plane (B300 only), set ``numberOfPlanes: 4``.
 
 .. code-block:: yaml
 
@@ -160,7 +170,7 @@ Configure the NICs for Spectrum-X RA2.2 with ``swplb`` multiplane mode. ``swplb`
      nodeSelector:
        feature.node.kubernetes.io/network-sriov.capable: "true"
      nicSelector:
-       nicType: "1023"  # "1025" for ConnectX-9; "a2dc" for BlueField-3 SuperNIC
+       nicType: "1023"  # ConnectX-8 SuperNIC (B300, GB300)
      template:
        numVfs: 1
        linkType: Ethernet

@@ -1,5 +1,45 @@
-Spectrum-X Operator API reference v1alpha2
-==========================================
+Spectrum-X CRDs and API Reference
+=================================
+
+A Spectrum-X Kubernetes deployment uses CRDs from several NVIDIA operators
+working together. This page documents the **Spectrum-X Operator** CRDs
+(v1alpha2 — ``SpectrumXRailPoolConfig``). For the other CRDs, see the
+linked references. For the full stack of operators, drivers, and CNIs that
+own these CRDs and how they depend on each other, see
+:doc:`Architecture and Components <components>`.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 26 22 52
+
+   * - CRD
+     - Owner
+     - Role
+   * - ``NicClusterPolicy``
+     - NVIDIA Network Operator
+     - Cluster-wide operator configuration. Enables NIC Configuration
+       Operator, NV-IPAM, Spectrum-X Operator, and secondary network
+       components.
+   * - ``NicConfigurationTemplate``
+     - NIC Configuration Operator
+     - Per-NIC firmware and Spectrum-X settings (link type, ``numVfs``,
+       multiplane mode, RA version). See
+       :doc:`Spectrum-X NIC Configuration <spectrum-x-configuration>`.
+   * - ``NicInterfaceNameTemplate``
+     - NIC Configuration Operator
+     - Predictable rail / plane-based netdev and RDMA names driven by udev
+       rules.
+   * - ``CIDRPool``
+     - NV-IPAM
+     - Per-rail IP allocation pool consumed by ``SpectrumXRailPoolConfig``.
+   * - :ref:`SpectrumXRailPoolConfig <SpectrumXRailPoolConfig>`
+     - Spectrum-X Operator
+     - Rail topology, PF selection, IPAM binding, and DRA / SR-IOV resource
+       exposure (full API below).
+   * - ``ResourceClaimTemplate``
+     - Kubernetes DRA
+     - Pod-to-GPU+VF binding via Dynamic Resource Allocation (Kubernetes
+       upstream resource).
 
 Packages:
 

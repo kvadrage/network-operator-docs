@@ -28,11 +28,13 @@ NVIDIA Spectrum-X NIC Configuration
    :backlinks: none
 
 
-`NVIDIA NIC Configuration Operator <https://github.com/Mellanox/nic-configuration-operator>`_ offers NVIDIA Spectrum-X-specific NIC configuration for different versions of the Reference Architecture (RA1.3, RA2.0, RA2.1, and RA2.2). RA2.1 introduced multiplane mode support for enhanced network performance with multiple data planes; RA2.2 is the latest supported version.
+`NVIDIA NIC Configuration Operator <https://github.com/Mellanox/nic-configuration-operator>`_ in Network Operator 26.4.0 supports **Spectrum-X RA 2.2** as the validated reference architecture. The ``spectrumXOptimized.version`` CRD field also accepts **RA 1.3**, **RA 2.0**, and **RA 2.1** for legacy or mixed-version configurations. RA 2.1 introduced multiplane mode support for enhanced network performance with multiple data planes; **RA 2.2 is the latest** and the validated default.
+
+For the Network Operator Spectrum-X RA support matrix and validated hardware, operating system, and Kubernetes combinations, see :doc:`Platform Support <../platform-support>`.
 
 .. note::
 
-   Currently, only ConnectX-8 (device ID ``1023``), ConnectX-9 (device ID ``1025``), and BlueField-3 SuperNIC (device ID ``a2dc``) devices are supported for Spectrum-X configuration. Hardware Packet Load Balancing (``hwplb``) multiplane mode is only supported on ConnectX-8 and ConnectX-9, and only with RA2.2.
+   Currently, ConnectX-7 NIC (device ID ``1021``), ConnectX-8 SuperNIC (device ID ``1023``), and BlueField-3 SuperNIC (device ID ``a2dc``) devices are supported for Spectrum-X configuration. Hardware Plane Load Balancing (``hwplb``) is supported only on ConnectX-8 SuperNIC with RA 2.2, and is **tech preview** — it is not part of the validated Spectrum-X Reference Architecture.
 
 
 ====================================================
@@ -110,19 +112,19 @@ The following multiplane modes are available with RA2.1 and RA2.2:
      - **Planes**
    * - ``none``
      - Single plane mode (no multiplane). This is the default.
-     - ConnectX-8, ConnectX-9, BF3 SuperNIC
+     - BlueField-3 SuperNIC, ConnectX-7 NIC, ConnectX-8 SuperNIC
      - 1
    * - ``swplb``
-     - Software Packet Load Balancing. The NIC port is split into multiple PFs, each assigned to a separate data plane.
-     - ConnectX-8, ConnectX-9, BF3 SuperNIC
+     - Software Plane Load Balancing. The NIC port is split into multiple PFs, each assigned to a separate data plane; the software stack distributes packets across planes.
+     - ConnectX-8 SuperNIC
      - 2, 4
-   * - ``hwplb``
-     - Hardware Packet Load Balancing. Uses hardware LAG resource allocation and NIC-level plane configuration for load balancing across planes. RA2.2 only.
-     - ConnectX-8, ConnectX-9 only
+   * - ``hwplb`` *(tech preview)*
+     - Hardware Plane Load Balancing. Uses hardware LAG resource allocation and NIC-level plane configuration to distribute packets across planes in the NIC hardware. RA 2.2 only. **Tech preview; not part of the validated Reference Architecture.**
+     - ConnectX-8 SuperNIC
      - 2, 4
    * - ``uniplane``
-     - Uniplane mode. Each port is configured as a separate plane without plane-level load balancing.
-     - ConnectX-8, ConnectX-9, BF3 SuperNIC
+     - Uniplane mode. Single-plane physical topology that uses the Spectrum-X multi-plane software stack and IP schema — multiple PFs all connect to the **same** ToR/plane (rather than separate planes as in ``swplb`` / ``hwplb``). Specialized configuration for compatibility or regression scenarios; for production deployments, use ``none`` for Single-Plane or ``swplb`` / ``hwplb`` for Dual-Plane / Quad-Plane.
+     - ConnectX-8 SuperNIC
      - 2
 
 .. note::
@@ -139,19 +141,19 @@ NIC type constraints
    * - **NIC Type**
      - **Device ID**
      - **Supported Multiplane Modes**
-   * - ConnectX-8
+   * - ConnectX-7 NIC
+     - ``1021``
+     - ``none``
+   * - ConnectX-8 SuperNIC
      - ``1023``
-     - ``none``, ``swplb``, ``hwplb``, ``uniplane``
-   * - ConnectX-9
-     - ``1025``
      - ``none``, ``swplb``, ``hwplb``, ``uniplane``
    * - BlueField-3 SuperNIC
      - ``a2dc``
-     - ``none``, ``swplb``, ``uniplane``
+     - ``none``
 
 .. warning::
 
-   The ``hwplb`` multiplane mode is only supported on ConnectX-8 (device ID ``1023``) and ConnectX-9 (device ID ``1025``), and only with RA2.2. Attempting to configure ``hwplb`` on a BlueField-3 SuperNIC, or with an RA version other than RA2.2, will be rejected by the API validation.
+   The ``hwplb`` multiplane mode is supported only on ConnectX-8 SuperNIC (device ID ``1023``) with RA 2.2, and is **tech preview** — it is not part of the validated Spectrum-X Reference Architecture. Attempting to configure ``hwplb`` on BlueField-3 SuperNIC or ConnectX-7 NIC, or with an RA version other than RA 2.2, will be rejected by the API validation.
 
 Configure custom interface names
 ---------------------------------
@@ -201,6 +203,13 @@ Example generated udev rules for RDMA devices (``/etc/udev/rules.d/10-nic-rdma-i
    ACTION=="add", KERNELS=="0000:3a:00.0", SUBSYSTEM=="infiniband", RUN+="/usr/bin/rdma dev set %k name rdma_1_0_1"
    ACTION=="add", KERNELS=="0000:3a:00.1", SUBSYSTEM=="infiniband", RUN+="/usr/bin/rdma dev set %k name rdma_1_1_1"
 
+.. note::
+
+   The actual generated names depend on the ``netDevicePrefix`` /
+   ``rdmaDevicePrefix`` you set on the ``NicInterfaceNameTemplate`` — see
+   the Quick-Start walkthroughs for the recommended rail / plane-based
+   naming (for example, ``net_rail0_plane0``).
+
 ================
 Validation rules
 ================
@@ -208,10 +217,10 @@ Validation rules
 The following validation rules are enforced by the API:
 
 - Spectrum-X optimizations can only be enabled when ``linkType`` is ``Ethernet`` and ``numVfs`` is ``1``.
-- Spectrum-X optimizations can only be enabled for ConnectX-8 (``nicType: 1023``), ConnectX-9 (``nicType: 1025``), or BlueField-3 SuperNIC (``nicType: a2dc``).
+- Spectrum-X optimizations can only be enabled for ConnectX-7 NIC (``nicType: 1021``), ConnectX-8 SuperNIC (``nicType: 1023``), or BlueField-3 SuperNIC (``nicType: a2dc``).
 - When Spectrum-X optimizations are enabled, ``roceOptimized`` must not be enabled (RoCE settings are included in the Spectrum-X configuration).
 - When Spectrum-X optimizations are enabled, ``rawNvConfig`` must be empty.
 - When ``multiplaneMode`` is ``none``, ``numberOfPlanes`` must be ``1``.
 - When ``multiplaneMode`` is not ``none``, ``numberOfPlanes`` must not be ``1``.
 - When ``version`` is ``RA1.3`` or ``RA2.0``, ``multiplaneMode`` must be ``none`` and ``numberOfPlanes`` must be ``1``.
-- The ``hwplb`` multiplane mode can only be enabled for ConnectX-8 (``nicType: 1023``) or ConnectX-9 (``nicType: 1025``), and only with ``version: RA2.2``.
+- The ``hwplb`` multiplane mode can only be enabled for ConnectX-8 SuperNIC (``nicType: 1023``), and only with ``version: RA 2.2``. ``hwplb`` is tech preview and is not part of the validated Reference Architecture.
