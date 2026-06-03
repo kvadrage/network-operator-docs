@@ -28,7 +28,7 @@ Heterogeneous Clusters
 
 .. note::
 
-   **Use this when:** your cluster contains multiple node types --- e.g., different GPU SKUs (H100 + H200), different NIC SKUs (ConnectX-7 + BF3 SuperNIC), or different OFED requirements.
+   **Use this when:** your cluster contains multiple node types --- e.g., different GPU SKUs (H100 + H200), different NIC SKUs (ConnectX-7 NIC + BlueField-3 SuperNIC), or different OFED requirements.
 
 ================================================================================
 Supported Configurations
@@ -319,8 +319,8 @@ The classification uses an embedded list of DPU product codes. BlueField-3 Super
 
        subgraph Node[Compute node]
            direction TB
-           BF3[BF3 DPU<br/>north-south]
-           SUPER[ConnectX-7 / BF3 SuperNIC<br/>east-west]
+           BF3[BlueField-3 DPU<br/>north-south]
+           SUPER[ConnectX-7 NIC / BlueField-3 SuperNIC<br/>east-west]
            GPU[GPUs]
            GPU --- SUPER
        end

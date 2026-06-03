@@ -107,7 +107,7 @@ Decision Matrix
      - ethernet / rdma_shared
      - MacVLAN, multi-tenant, network-segmentation
    * - :doc:`Spectrum-X <spectrum-x>`
-     - NVIDIA Spectrum-X multi-rail AI interconnect (RA2.1 or RA2.2). HWPLB / SWPLB / Uniplane / None modes.
+     - NVIDIA Spectrum-X multi-rail AI interconnect (RA2.1 or RA2.2). HWPLB (tech preview) / SWPLB / Uniplane / None modes.
      - ethernet / sriov / spectrum-x
      - Spectrum-X, multiplane, RA2.2, HWPLB
 

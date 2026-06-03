@@ -48,7 +48,7 @@ The ``--multiplane-mode`` flag selects how planes are mapped onto NICs. ``--spec
 HWPLB
 ------
 
-Hardware Plane Load Balancing for larger-scale clusters with 2-tier or 3-tier switch topologies:
+Hardware Plane Load Balancing for larger-scale clusters with 2-tier or 3-tier switch topologies. **Tech preview**, supported on ConnectX-8 SuperNIC with RA2.2 only --- not part of the validated Spectrum-X Reference Architecture:
 
 .. code-block:: bash
 
@@ -70,7 +70,7 @@ Software Plane Load Balancing for smaller-scale Spectrum-X clusters. Generates s
 Uniplane
 ---------
 
-Unified plane mode with no plane separation. Use with ``--number-of-planes 1``:
+Single-plane physical topology that runs the Spectrum-X multiplane software stack and IP schema --- multiple PFs all connect to the **same** ToR/plane (rather than separate planes as in ``swplb`` / ``hwplb``). A specialized configuration for compatibility or regression scenarios; for production, use ``none`` for Single-Plane or ``swplb`` / ``hwplb`` for Dual-Plane / Quad-Plane. Supported on ConnectX-8 SuperNIC only. Use with ``--number-of-planes 1``:
 
 .. code-block:: bash
 
@@ -81,7 +81,7 @@ Unified plane mode with no plane separation. Use with ``--number-of-planes 1``:
 None (Single Plane)
 --------------------
 
-No multiplane separation. Use with BlueField-3 SuperNIC or simple topologies. ``none`` requires ``--number-of-planes 1``:
+No multiplane separation. Use with ConnectX-7 NIC, BlueField-3 SuperNIC, or simple topologies. ``none`` requires ``--number-of-planes 1``:
 
 .. code-block:: bash
 
@@ -124,12 +124,18 @@ NIC Type Constraints
    * - **NIC Type**
      - **Device ID**
      - **Supported Modes**
-   * - ConnectX-8
-     - ``1023``
-     - ``swplb``, ``hwplb``, ``uniplane``
+   * - ConnectX-7 NIC
+     - ``1021``
+     - ``none`` only
    * - BlueField-3 SuperNIC
      - ``a2dc``
      - ``none`` only
+   * - ConnectX-8 SuperNIC
+     - ``1023``
+     - | ``none``
+       | ``swplb``
+       | ``hwplb`` *(tech preview)*
+       | ``uniplane``
 
 ================================================================================
 Pinning to RA2.1

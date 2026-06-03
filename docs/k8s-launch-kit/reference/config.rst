@@ -277,7 +277,7 @@ Spectrum-X-specific settings.
    * - **Field**
      - **Description**
    * - ``nicType``
-     - NIC type device ID. ``1023`` = ConnectX-8; ``a2dc`` = BlueField-3 SuperNIC.
+     - NIC type device ID. ``1021`` = ConnectX-7 NIC; ``1023`` = ConnectX-8 SuperNIC; ``a2dc`` = BlueField-3 SuperNIC.
    * - ``overlay``
      - Overlay mode.
    * - ``rdmaPrefix``
