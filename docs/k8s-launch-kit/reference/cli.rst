@@ -166,7 +166,7 @@ Customization
 l8k deploy
 ================================================================================
 
-Applies previously generated manifests to the cluster in dependency order (NicClusterPolicy first, then per-group NicNodePolicy, then networks and workloads).
+Applies previously generated manifests to the cluster in four phases: NicClusterPolicy first (await ready), per-group NicNodePolicy (await each), all remaining CRs in one batch (controllers reconcile concurrently), then verify every manifest reached a terminal state. Example workload manifests (``*example*``) are skipped here --- they're applied by ``l8k validate --connectivity`` / ``l8k deploy --verify`` as part of the data-plane phase. See :doc:`../workflows/deploy` for the full deployment-ordering description.
 
 .. list-table::
    :header-rows: 1
@@ -178,6 +178,10 @@ Applies previously generated manifests to the cluster in dependency order (NicCl
      - Path to kubeconfig (falls back to ``$KUBECONFIG``).
    * - ``--deployment-files <string>``
      - Directory containing the manifests to apply (default: ``./deployment``).
+   * - ``--deploy-timeout <duration>``
+     - End-to-end wall-clock budget for the apply + reconciliation phase (e.g., ``45m``, ``2h``). ``0`` (default) means no deadline; polls until every manifest reaches a terminal state. Useful for matching a maintenance window when SR-IOV reconciliation on a large cluster can take an hour or more.
+   * - ``--verify``
+     - After a successful apply, chain the connectivity matrix (same flow as ``l8k validate --connectivity``): apply the example DaemonSet, wait for it to roll out, run a ping matrix across every rail and pod pair, then clean up.
    * - ``--dry-run``
      - Preview what would be applied without changing the cluster.
 
@@ -185,7 +189,7 @@ Applies previously generated manifests to the cluster in dependency order (NicCl
 l8k validate
 ================================================================================
 
-Verifies a deployment matches the selected Network Operator release: compares the deployed Helm chart's appVersion with the version expected by ``networkOperator.selectedRelease`` in ``cluster-config.yaml``, then confirms every YAML manifest under ``--deployment-files`` is present in the cluster (skipping example workloads). Exits 4 on any missing manifest or version mismatch. See :doc:`../workflows/validate` for full details.
+Verifies a deployment by running four checks back-to-back: Network Operator Helm release version (compared against ``networkOperator.selectedRelease`` in ``cluster-config.yaml``); per-component version cross-check that walks the live ``NicClusterPolicy`` + ``NicNodePolicy`` and confirms each section's ``.version`` field matches the catalog (catches out-of-band edits and partial upgrades the Helm check misses); per-manifest state classification (READY / IN-PROGRESS / ERROR / MISSING via the per-Kind validator registry); and a data-plane connectivity matrix (apply the example DaemonSet, ping every rail across every pod pair). Writes a self-contained HTML report to ``<deployment-files>/verify-report.html`` by default. Exits 4 on any missing/error manifest, Helm-version mismatch, component-version mismatch, or connectivity-matrix failure. See :doc:`../workflows/validate` for full details.
 
 .. list-table::
    :header-rows: 1
@@ -196,9 +200,21 @@ Verifies a deployment matches the selected Network Operator release: compares th
    * - ``--kubeconfig <string>``
      - Path to kubeconfig (falls back to ``$KUBECONFIG``).
    * - ``--user-config <string>``
-     - Cluster config file (default: ``./cluster-config.yaml``). Read for ``networkOperator.selectedRelease`` and operator namespace.
+     - Cluster config file. Lookup order: explicit path → ``./cluster-config.yaml`` → ``<deployment-files>/../cluster-config.yaml`` → ``<deployment-files>/cluster-config.yaml``. Read for ``networkOperator.selectedRelease`` and operator namespace.
    * - ``--deployment-files <string>``
      - Directory containing the manifests to verify (default: ``./deployment``).
+   * - ``--connectivity``
+     - Run the data-plane ping matrix. Default ``true``. Pass ``--connectivity=false`` to limit validate to the static manifest + Helm-release-version checks.
+   * - ``--connectivity-timeout <duration>``
+     - Wall-clock budget for the connectivity phase (default: ``5m``).
+   * - ``--ping-count <int>``
+     - Number of ICMP echoes per ``src → dst`` pair (``ping -c N``). Default ``3``.
+   * - ``--keep``
+     - Leave the test DaemonSet running after ``--connectivity`` completes (useful for follow-up debugging).
+   * - ``--wait <duration>``
+     - Block validate up to this duration waiting for in-progress manifests to reach a terminal state. ``0`` (default) returns immediately on the first snapshot. Re-polls the cluster every 10 s.
+   * - ``--report-path <string>``
+     - Write the HTML report to this path. Empty (default) writes to ``<deployment-files>/verify-report.html``. Pass ``-`` to skip the report file entirely.
 
 ================================================================================
 l8k preset list

@@ -27,6 +27,7 @@
    Getting Started with Red Hat OpenShift <getting-started-with-openshift.rst>
    NVIDIA Network Operator Government Ready <install-network-operator-gov-ready.rst>
    NIC Configuration Operator <nic-conf-operator/nic-configuration-operator.rst>
+   NVIDIA Spectrum-X <spectrum-x/spectrum-x.rst>
    Configuration Assistance with Kubernetes Launch Kit <k8s-launch-kit/k8s-launch-kit.rst>
    AI Skills <ai-skills.rst>
    Customization Options and CRDs <customizations/customization.rst>

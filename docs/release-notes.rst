@@ -36,6 +36,13 @@ Changes and New Features
 
    * - Version
      - Description
+   * - 26.4.0
+     - | - Added support for NVIDIA Spectrum-X Reference Architecture 2.2 (RA2.2) with the new ``SpectrumXRailPoolConfig`` v1alpha2 CRD in NVIDIA Spectrum-X Operator
+       | - Added support for ``NicNodePolicy`` CRD, enabling per-node-group DOCA-OFED driver management in NVIDIA Network Operator
+       | - [TECH PREVIEW] Added Dynamic Resource Allocation (DRA) support for SR-IOV in NVIDIA Network Operator
+       | - Added global configuration support for ``NicClusterPolicy``
+       | - Added preflight checks for the DOCA-OFED driver container (kernel module dependency validation prior to driver load)
+       | - Added interactive HTML report output for the SOS report collection script
    * - 26.1.0
      - | Added support for ConnectX-9 SuperNIC
        | - Added support for Spectrum-X Ethernet Networking Platform with Kubernetes [GA]
