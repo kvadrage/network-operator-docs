@@ -37,12 +37,21 @@ Changes and New Features
    * - Version
      - Description
    * - 26.4.0
-     - | - Added support for NVIDIA Spectrum-X Reference Architecture 2.2 (RA2.2) with the new ``SpectrumXRailPoolConfig`` v1alpha2 CRD in NVIDIA Spectrum-X Operator
-       | - Added support for ``NicNodePolicy`` CRD, enabling per-node-group DOCA-OFED driver management in NVIDIA Network Operator
-       | - [TECH PREVIEW] Added Dynamic Resource Allocation (DRA) support for SR-IOV in NVIDIA Network Operator
+     - | - Added support for Kubernetes 1.35
+       | - Added support for Red Hat OpenShift 4.21
+       | - Added support for NVIDIA GB300 NVL72 (DGX/HGX) systems
+       | - Added support for NVIDIA Spectrum-X Reference Architecture 2.2 (RA 2.2) in NVIDIA Spectrum-X Operator, with unified configuration and the new ``SpectrumXRailPoolConfig`` v1alpha2 CRD
+       | - Added IPv6 support for Spectrum-X on Kubernetes
+       | - Added consistent naming of RDMA and network devices in Pods
+       | - Added RDMA CNI host-to-Pod QoS propagation
+       | - Enhanced NVIDIA Kubernetes Launch Kit with simplified Spectrum-X configuration generation, new use-cases, and AI-assisted troubleshooting
+       | - Added KubeVirt support on vanilla Kubernetes, enabling Kubernetes-native VM deployments with accelerated East-West networking
+       | - Added heterogeneous cluster support through multiple NIC policies, with the new ``NicNodePolicy`` CRD enabling per-node-group DOCA-OFED driver management in NVIDIA Network Operator
        | - Added global configuration support for ``NicClusterPolicy``
        | - Added preflight checks for the DOCA-OFED driver container (kernel module dependency validation prior to driver load)
        | - Added interactive HTML report output for the SOS report collection script
+       | - [TECH PREVIEW] Added Dynamic Resource Allocation (DRA) support for SR-IOV in NVIDIA Network Operator
+       | - [TECH PREVIEW] Added support for multiple workloads (Pods) per node with topology awareness using DRA on Spectrum-X
    * - 26.1.0
      - | - Added support for ConnectX-9 SuperNIC
        | - Added support for Spectrum-X Ethernet Networking Platform with Kubernetes [GA]
@@ -231,6 +240,8 @@ Bug Fixes
 
    * - Version
      - Description
+   * - 26.4.0
+     - | - Fixed stale VF representor deletion from the OVS bridge in OVS-CNI after a Kubernetes node reboot
    * - 1.4.0
      - | - Fixed a cluster scale-up issue
        | - Fixed an issue with IPoIB CNI deployment in OCP
@@ -255,8 +266,7 @@ Known Limitations
    * - Version
      - Description
    * - 26.1.0
-     - | - There is a known limitation in OVS-CNI after applying SR-IOV Operator OVSNetwork and SriovNetworkNodePolicy with OVS bridge and switchdev mode configuration. The limitation is that after the Kubernetes node is rebooted, the VF representor that was attached to the OVS bridge will not be deleted. The workaround is to (manually/CD) delete all stale VF representors after the node is rebooted
-       | - Multus CNI does not use a service account token after the Kubernetes API rotates it. The recommended workaround is to edit the Multus CNI DaemonSet manually to remove ``--skip-config-watch`` CLI argument.
+     - | - Multus CNI does not use a service account token after the Kubernetes API rotates it. The recommended workaround is to edit the Multus CNI DaemonSet manually to remove ``--skip-config-watch`` CLI argument.
        | - The DOCA driver container is validated with host kernel versions up to 6.8.0-100. Compatibility with newer kernel versions is not guaranteed and may require a newer DOCA driver container release
    * - 25.10.0
      - | - NVIDIA Networking NIC Configuration Operator doesn't support Socket Direct Adapters
