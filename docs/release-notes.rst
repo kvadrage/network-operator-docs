@@ -44,7 +44,7 @@ Changes and New Features
        | - Added preflight checks for the DOCA-OFED driver container (kernel module dependency validation prior to driver load)
        | - Added interactive HTML report output for the SOS report collection script
    * - 26.1.0
-     - | Added support for ConnectX-9 SuperNIC
+     - | - Added support for ConnectX-9 SuperNIC
        | - Added support for Spectrum-X Ethernet Networking Platform with Kubernetes [GA]
        | - Added support for Spectrum-X Single-plane and SW Multi-plane topologies in Spectrum-X Operator and NIC Configuration Operator
        | - Added Spectrum-X support for NVIDIA Kubernetes Launch Kit
@@ -76,7 +76,7 @@ Changes and New Features
        | - Integrate NVIDIA Network Operator with NVIDIA Maintenance Operator for DOCA-OFED Driver container upgrade
        | - Added support for OpenShift 4.18
        | - Added support for ConnectX-8 SuperNIC
-       | - Added support for NVIDIA Spectrum-X Operator deployment - Tech Preview
+       | - [TECH PREVIEW] Added support for NVIDIA Spectrum-X Operator deployment
    * - 25.1.0
      - | - Added support for OpenShift Container Platform v4.17
        | - Added support for SUSE Linux Enterprise Server 15 SP6 with Upstream K8s and Rancher
@@ -93,22 +93,22 @@ Changes and New Features
      - | - Added support for OpenShift Container Platform v4.16
        | - Added support for NVIDIA Grace based ARM platforms with OpenShift Container Platform
        | - Added support for RHEL v8.9, v8.10, v9.3 and v9.4 with Upstream K8s and Containerd runtime
-       | - Added support for Switchdev mode SR-IOV mode with OVS CNI with RHEL
+       | - Added support for Switchdev SR-IOV mode with OVS CNI on RHEL
    * - 24.4.1
      - | - Fixed NVIDIA Network Operator images in OpenShift Container Platform bundle
    * - 24.4.0
      - | - Added support for OpenShift Container Platform v4.15
        | - Added support for Ubuntu 24.04
-       | - Added support for NVIDIA Grace based ARM platforms with Ubuntu 22.04 and Upstream K8s as a Tech Preview feature
+       | - [TECH PREVIEW] Added support for NVIDIA Grace based ARM platforms with Ubuntu 22.04 and Upstream K8s
        | - Added support for NVIDIA IGX Orin based ARM platforms with Ubuntu 22.04 and Upstream K8s as a GA feature
        | - Added support for Precompiled DOCA-OFED Driver containers for Ubuntu 22.04
-       | - Added support for Switchdev SR-IOV mode with SR-IOV Network Operator and OVS CNI as a Tech Preview feature
+       | - [TECH PREVIEW] Added support for Switchdev SR-IOV mode with SR-IOV Network Operator and OVS CNI
        | - Added support for DOCA Telemetry Service (DTS) integration to expose network telemetry and NIC metrics in K8s
        | - Added support for network namespace isolation of RDMA devices with RDMA CNI
        | - Added support for RHEL and OpenShift deployments with Real-time kernels
        | - Enhanced DOCA-OFED Driver container deployment and significantly reduced compilation time after node reboots
    * - 24.1.0
-     - | - Added support for Ubuntu 22.04 with Upstream K8s on ARM platforms (NVIDIA IGX Orin) - Tech Preview
+     - | - [TECH PREVIEW] Added support for Ubuntu 22.04 with Upstream K8s on ARM platforms (NVIDIA IGX Orin)
        | - Added support for CNI bin directory configuration
        | - Added support for OpenShift MOFED/DOCA-OFED driver container build and deployment via driver toolkit (DTK)
        | - Added support for Ubuntu 22.04 deployments with Real-time kernels
@@ -255,7 +255,7 @@ Known Limitations
    * - Version
      - Description
    * - 26.1.0
-     - | - There is a known limitation in OVS-CNI after applying SR-IOV Operator OVSNetwork and SriovNetworkNodePolicy with OVS bridge and switchdev mode configuration. The limitation is that after k8s node is rebooted, the VF representor that was attached to the OVS bridge will not be deleted. The workaround is to (manually/CD) delete all stale VF representors after the node is rebooted
+     - | - There is a known limitation in OVS-CNI after applying SR-IOV Operator OVSNetwork and SriovNetworkNodePolicy with OVS bridge and switchdev mode configuration. The limitation is that after the Kubernetes node is rebooted, the VF representor that was attached to the OVS bridge will not be deleted. The workaround is to (manually/CD) delete all stale VF representors after the node is rebooted
        | - Multus CNI does not use a service account token after the Kubernetes API rotates it. The recommended workaround is to edit the Multus CNI DaemonSet manually to remove ``--skip-config-watch`` CLI argument.
        | - The DOCA driver container is validated with host kernel versions up to 6.8.0-100. Compatibility with newer kernel versions is not guaranteed and may require a newer DOCA driver container release
    * - 25.10.0
@@ -265,20 +265,19 @@ Known Limitations
        | - DOCA driver container deployment may fail if NVIDIA drivers are in use by third-party kernel modules or user-space applications. The recommended workaround is to use non-containerized DOCA drivers deployed via the DOCA-Host package
        | - SR-IOV Network Operator doesn't support SR-IOV SystemD configuration mode on OCP
    * - 25.1.0
-     - | - In Infiniband mode, due to a kernel bug, there is a limitation on the number of Virtual Functions (VFs) on a single Physical Function (PF)
+     - | - In InfiniBand mode, due to a kernel bug, there is a limitation on the number of Virtual Functions (VFs) on a single Physical Function (PF)
            The recommendation is to create up to 16 VFs per PF. Larger number will cause "ip link show dev <device_name>" to fail with a "Message too long" error
-       | - In infiniband mode, in case of existing Intel NICs, loaded `irdma` module should be unloaded before deploying DOCA-OFED driver
+       | - In InfiniBand mode, in case of existing Intel NICs, loaded `irdma` module should be unloaded before deploying DOCA-OFED driver
    * - 24.10.0
      - | - There is a known limitation when using NVIDIA NICs as **primary network interfaces**. If the NVIDIA DOCA-OFED Driver container is configured to be deployed, we cannot guarantee that the inbox or pre-installed NVIDIA NIC driver will unload successfully if it remains in use
            If the current driver does unload, it removes all NVIDIA NIC networking interfaces and netdevices. DOCA-OFED driver container then loads new drivers but only restores **basic configuration** (for example, IP addresses) on the primary network interface’s Physical Function (PF) and its Virtual Functions (VFs). More advanced settings (such as VLANs, bonding, and OVS) will **not** be restored automatically
            This limitation applies to **all** versions of the NVIDIA Network Operator
-   * - 24.10.0
-     - | - There is a known limitation when using `docker` on RHEL 8 and 9. If you encounter this issue, it is recommended to use "the preferred, maintained, and supported container runtime of choice for Red Hat Enterprise Linux"
+       | - There is a known limitation when using `docker` on RHEL 8 and 9. If you encounter this issue, it is recommended to use "the preferred, maintained, and supported container runtime of choice for Red Hat Enterprise Linux"
        |   For more details, refer to the article `Is the docker package available for Red Hat Enterprise Linux 8 and 9? <https://access.redhat.com/solutions/3696691>`_ in the Red Hat Knowledge Base
        | - In NIC Configuration Operator template v0.1.14 BF2/BF3 DPUs (not SuperNICs) FW reset flow isn't supported
        | - NVIDIA NIC Configuration Operator v0.1.14 Firmware Mismatch notification feature doesn't support NVIDIA BlueField-3 SuperNIC
    * - 24.7.0
-     - | - In case ENABLE_NFSRDMA is enabled for DOCA-OFED Driver container and NVMe modules are loaded in the host system, NVIDA DOCA-OFED Driver Container will fail to load.
+     - | - In case ENABLE_NFSRDMA is enabled for DOCA-OFED Driver container and NVMe modules are loaded in the host system, NVIDIA DOCA-OFED Driver Container will fail to load.
        |   User should blacklist NVMe modules to prevent them from loading on system boot. If this is not possible (e.g when the system uses NVMe SSD drives) then ENABLE_NFSRDMA must be set to `false`.
        |   Using features such as GPU Direct Storage is not supported in such case
    * - 23.10.0
