@@ -31,6 +31,11 @@ specialized devices like SR-IOV network interfaces. DRA puts device configuratio
 of device vendors through drivers such as the DRA Driver for SR-IOV. This page outlines how to install the
 NVIDIA DRA Driver for SR-IOV with the NVIDIA Network Operator.
 
+.. note::
+
+   The DRA Driver for SR-IOV is a **Tech Preview** feature: it has limited testing and is not
+   recommended for production deployments. See :doc:`Platform Support <../platform-support>` for support-tier definitions.
+
 Before using the DRA Driver for SR-IOV, it is recommended that you are familiar with the following concepts:
 
 * `Upstream Kubernetes DRA documentation <https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/>`_.
